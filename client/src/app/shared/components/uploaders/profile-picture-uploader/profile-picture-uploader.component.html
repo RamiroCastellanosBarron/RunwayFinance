@@ -1,0 +1,50 @@
+<ng-container *ngIf="!showUploader()">
+  <div class="row row-cols-1 g-2 mb-3">
+    <div class="col-auto">
+      <div class="position-relative">
+        <button type="button" class="btn-close position-absolute top-0 end-0 mt-2 me-2" (click)="delete()"></button>
+        <img src="{{account.photoUrl}}" alt="" width="350px" class="img-thumbnail rounded-circle">
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="showUploader()">
+  <div class="col-12 col-md-3">
+    <div
+      class="card bg-faded p-3 text-center mb-3 my-drop-zone"
+      [ngClass]="{ 'nv-file-over': hasBaseDropzoneOver }"
+      (fileOver)="fileOverBase($event)" [uploader]="uploader!" ng2FileDrop >
+      <i class="fa fa-upload fa-3x"></i>Arrasta tu foto aquí
+    </div>
+
+    <div class="mb-3">
+      <label for="formFile" class="form-label">Foto</label>
+      <input
+        class="form-control"
+        type="file"
+        id="formFile"
+        ng2FileSelect
+        [uploader]="uploader!"
+        multiple
+      />
+    </div>
+  </div>
+  <div
+    class="col-12 col-md-9"
+    style="margin-bottom: 40px"
+    *ngIf="uploader?.queue?.length"
+  >
+    <div>
+      <div class="mb-3">
+        <div class="progress">
+          <div
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            [ngStyle]="{ width: uploader?.progress + '%' }"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
