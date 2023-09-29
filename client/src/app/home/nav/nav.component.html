@@ -1,9 +1,29 @@
-<nav class="navbar bg-body-tertiary">
+<nav class="navbar navbar-expand-md bg-body fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand">RunwayFinance</a>
-    <form class="d-flex" role="search">
-      <input #search (keyup.enter)="onSearch()" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
+    <a class="navbar-brand" routerLink="/">RunwayFinance</a>
+  <button
+    class="navbar-toggler d-flex d-md-none order-3 p-2 focus-ring focus-ring-primary"
+    style="--bs-focus-ring-color: rgba(var(--bs-success-rgb), .0)"
+    type="button"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#navbarOffcanvasLg">
+    <i class="bi bi-three-dots"></i>
+  </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvasLg" aria-labelledby="navbarOffcanvasLgLabel">
+      <div class="offcanvas-header px-4 pb-0">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
+          RunwayFinance
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <form class="d-flex" role="search">
+          <input #search (keyup.enter)="onSearch()" class="form-control form-control-lg me-2 bg-body-tertiary" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-lg btn-outline-success" (click)="onSearch()" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 </nav>

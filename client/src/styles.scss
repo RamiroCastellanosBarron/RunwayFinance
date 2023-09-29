@@ -1,0 +1,51 @@
+$primary: #9eb7e5;
+$success: #109f01;
+$danger: #bb0000;
+$warning: #fd9c2b;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 130px;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  // font-family: 'Inter', sans-serif;
+  // font-weight: 400;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(211, 211, 211, 0.5);
+  border-radius: 20px;
+  border: none;
+}
+
+*::-webkit-scrollbar-button {
+  display: none;
+}
+
+.navbar-toggler,
+.navbar-toggler:hover,
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler:visited {
+  border: 0 !important;
+  outline: none !important;
+}
+

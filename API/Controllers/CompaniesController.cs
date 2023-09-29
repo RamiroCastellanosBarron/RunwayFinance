@@ -43,5 +43,16 @@ namespace API.Controllers
 
             return result;
         }
+
+        [HttpGet("stock-prices-by-security")]
+        public async Task<ActionResult<ApiResponseSecurityStockPrices>> GetStockPricesBySecurity
+            ([FromQuery]StockPricesBySecurityParams parameters)
+        {
+            var response = await _intrinioService.GetStockPricesBySecurity(parameters);
+
+            if (response == null) return NotFound("Not found");
+
+            return Ok(response);
+        }
     }
 }

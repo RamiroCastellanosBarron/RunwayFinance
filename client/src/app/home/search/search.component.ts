@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CompaniesService } from 'src/app/core/services/companies.service';
+import { SearchTriggerService } from 'src/app/core/services/search-trigger.service';
 import { Company } from 'src/app/shared/models/company';
 import { CompanySearchParams } from 'src/app/shared/models/company-search-params';
 import { CompanySummary } from 'src/app/shared/models/company-summary';
@@ -11,23 +13,26 @@ import { Pagination } from 'src/app/shared/models/pagination';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   companies?: CompanySummary[];
   pagination?: Pagination;
   searchParams: CompanySearchParams = new CompanySearchParams();
+  private searchTriggerSubscription?: Subscription;
 
-  constructor(private route: ActivatedRoute, private companiesService: CompaniesService) {
+  constructor(private route: ActivatedRoute, private companiesService: CompaniesService,
+    private searchTriggerService: SearchTriggerService) {
     this.searchParams = this.companiesService.getParams();
-    this.route.queryParams.subscribe({
-      next: params => {
-        this.searchParams.search = params['q'];
-        this.companiesService.setParams(this.searchParams);
-      }
-    })
+  }
+
+  ngOnDestroy() {
+    this.searchTriggerSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.search();
+    this.searchTriggerSubscription = this.searchTriggerService.triggerSearch$.subscribe(() => {
+      this.search();
+    });
   }
 
   onPageChanged(event: any) {
@@ -41,16 +46,17 @@ export class SearchComponent implements OnInit {
   }
 
   search() {
-    const parameters = this.companiesService.getParams();
-    console.log(parameters);
-    this.companiesService.getCompanies(this.companiesService.getParams()).subscribe({
-      next: response => {
-        if (response.result && response.pagination) {
-          this.companies = response.result;
-          this.pagination = response.pagination;
+    console.log(this.searchParams);
+    if (this.searchParams.search !== '') {
+      this.companiesService.getCompanies(this.companiesService.getParams()).subscribe({
+        next: response => {
+          if (response.result && response.pagination) {
+            this.companies = response.result;
+            this.pagination = response.pagination;
+          }
         }
-      }
-    });
+      });
+    }
   }
 
 }

@@ -8,6 +8,7 @@ import { RealtimeStockPrice } from 'src/app/shared/models/realtime-stock-price';
 import { PaginatedResult } from 'src/app/shared/models/pagination';
 import { getPaginatedResult, getPaginationHeaders } from 'src/app/shared/utils/paginationHelper';
 import { environment } from 'src/environments/environment';
+import { ApiResponseSecurityStockPrices, SecurityStockPricesParams } from 'src/app/shared/models/stock-prices-by-security';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,14 @@ export class CompaniesService {
 
     return this.http.get<RealtimeStockPrice>
       (`${this.baseUrl}companies/stock-last-day`, { params: params });
+  }
+
+  getStockPricesBySecurity(parameters: SecurityStockPricesParams): Observable<ApiResponseSecurityStockPrices> {
+    let params = parameters.toHttpParams(parameters);
+    console.log(params);
+
+    return this.http.get<ApiResponseSecurityStockPrices>
+      (`${this.baseUrl}companies/stock-prices-by-security`, { params: params })
   }
 
   getParams() {

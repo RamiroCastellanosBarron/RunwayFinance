@@ -1,8 +1,8 @@
-<div *ngIf="company && stockPrice" class="container-fluid container-lg">
-  <h1 class="display-6">{{company.name}}</h1>
+<ng-container *ngIf="company && stockPrice && securityStockPrices">
 
   <div class="row row-cols-1 row-cols-md-2 g-2">
     <div class="col col-lg-8">
+      <h1 class="display-6">{{company.name}}</h1>
 
     </div>
     <div class="col col-lg-4">
@@ -12,25 +12,28 @@
           <div class="ms-2 me-auto">
             <div class="fw-bold">Previous close</div>
           </div>
-          {{stockPrice.lastPrice}}
+          {{ stockPrice.lastPrice | currency:'USD' }}
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Day range</div>
           </div>
-          --
+          {{securityStockPrices.stockPrices[0].adjLow| currency:'USD'}} -
+          {{securityStockPrices.stockPrices[0].adjHigh | currency:'USD'}}
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Year range</div>
           </div>
-          --
+          {{securityStockPrices.stockPrices[0].fiftyTwoWeekLow | currency:'USD'}} -
+          {{securityStockPrices.stockPrices[0].fiftyTwoWeekHigh | currency:'USD'}}
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Avg. volume</div>
           </div>
-          ** {{stockPrice.exchangeVolume}}
+          <!-- {{stockPrice.exchangeVolume | currency:'USD':'symbol':'1.0-0' }} -->
+          --
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
@@ -67,4 +70,4 @@
 
   <app-business-summary-modal [company]="company"></app-business-summary-modal>
 
-</div>
+</ng-container>

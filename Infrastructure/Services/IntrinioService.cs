@@ -34,6 +34,12 @@ namespace Infrastructure.Services
             return await _securityApi.GetSecurityRealtimePriceAsync(identifier);
         }
 
+        public async Task<ApiResponseSecurityStockPrices> GetStockPricesBySecurity(StockPricesBySecurityParams parameters)
+        {
+            return await _securityApi.GetSecurityStockPricesAsync(parameters.Identifier, parameters.StartDate, parameters.EndDate,
+                parameters.Frequency, parameters.PageSize, parameters.NextPage);
+        }
+
         public async Task<PagedList<CompanySummary>> SearchCompanies(SearchCompanyParams searchParams)
         {
             var result = await _companyApi.SearchCompaniesAsync

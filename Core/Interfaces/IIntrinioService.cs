@@ -8,5 +8,6 @@ namespace Core.Interfaces
         Task<PagedList<CompanySummary>> SearchCompanies(SearchCompanyParams searchParams);
         Task<Company> GetCompany(string identifier);
         Task<RealtimeStockPrice> GetLastDayStock(string identifier, string source);
+        Task<ApiResponseSecurityStockPrices> GetStockPricesBySecurity(StockPricesBySecurityParams parameters);
     }
 }
