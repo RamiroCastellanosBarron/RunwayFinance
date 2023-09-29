@@ -16,9 +16,11 @@ namespace API.Extensions
                 opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
             });
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+            services.Configure<IntrinioSettings>(config.GetSection("IntrinioSettings"));
             services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IIntrinioService, IntrinioService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IDocumentService, DocumentService>();

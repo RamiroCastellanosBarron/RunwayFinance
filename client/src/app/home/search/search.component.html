@@ -1,0 +1,45 @@
+<div class="container-fluid container-lg" style="margin-top: 100px;">
+  <h1 class="display-6 fw-demibold">
+    Buscador
+  </h1>
+
+  <div *ngIf="companies">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Ticker</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let company of companies" routerLink="/company/{{company.id}}">
+          <th>
+            {{company.id}}
+          </th>
+          <th>
+            {{company.name}}
+          </th>
+          <th>
+            {{company.ticker}}
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <app-pager
+      *ngIf="pagination"
+      [currentPage]="pagination.currentPage"
+      [itemsPerPage]="pagination.itemsPerPage"
+      [totalItems]="pagination.totalItems"
+      (pageChanged)="onPageChanged($event)"
+      >
+    </app-pager>
+  </div>
+
+
+</div>
+
+

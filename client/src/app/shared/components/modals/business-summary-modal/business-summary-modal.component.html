@@ -1,0 +1,22 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header border-bottom-0">
+        <h1 class="modal-title fs-5">{{company.legalName}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-0">
+        <p>{{company.shortDescription}}</p>
+        <p><strong>CEO: </strong>{{company.ceo}}</p>
+        <p><strong>Employee count: </strong>{{company.employees}}</p>
+        <p><strong>Address: </strong>{{company.businessAddress}}</p>
+        <p>
+          <a href="https://{{company.companyUrl}}" target="_blank">Visit website</a>
+        </p>
+        <p><strong>Category: </strong>{{company.industryCategory}}</p>
+        <p><strong>Group: </strong>{{company.industryGroup}}</p>
+        <p><strong>Sector: </strong>{{company.sector}}</p>
+      </div>
+    </div>
+  </div>
+</div>

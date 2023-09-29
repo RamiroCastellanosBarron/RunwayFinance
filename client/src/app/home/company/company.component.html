@@ -1,0 +1,70 @@
+<div *ngIf="company && stockPrice" class="container-fluid container-lg">
+  <h1 class="display-6">{{company.name}}</h1>
+
+  <div class="row row-cols-1 row-cols-md-2 g-2">
+    <div class="col col-lg-8">
+
+    </div>
+    <div class="col col-lg-4">
+
+      <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Previous close</div>
+          </div>
+          {{stockPrice.lastPrice}}
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Day range</div>
+          </div>
+          --
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Year range</div>
+          </div>
+          --
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Avg. volume</div>
+          </div>
+          ** {{stockPrice.exchangeVolume}}
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Market cap</div>
+          </div>
+          --
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Dividend yield</div>
+          </div>
+          --
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Primary exange</div>
+          </div>
+          {{company.stockExchange}}
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Credit rating</div>
+          </div>
+          --
+        </li>
+      </ul>
+
+      <div class="d-grid gap-2">
+        <button class="btn btn-lg btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">About</button>
+      </div>
+
+    </div>
+  </div>
+
+  <app-business-summary-modal [company]="company"></app-business-summary-modal>
+
+</div>
