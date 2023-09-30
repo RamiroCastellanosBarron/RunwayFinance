@@ -20,7 +20,8 @@ namespace API.Extensions
             services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IIntrinioService, IntrinioService>();
+            services.AddScoped<ISecurityService, SecurityService>();
+            services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IDocumentService, DocumentService>();

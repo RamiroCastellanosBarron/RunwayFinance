@@ -1,0 +1,31 @@
+<div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+  <button class="btn btn-bd-primary text-white py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" data-bs-toggle="dropdown">
+    <i *ngIf="(themeService.selectedTheme | async) === 'light'" class="bi bi-sun-fill"></i>
+    <i *ngIf="(themeService.selectedTheme | async) === 'dark'" class="bi bi-moon-stars-fill"></i>
+    <i *ngIf="(themeService.selectedTheme | async) === 'auto'" class="bi bi-circle-half"></i>
+    <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end shadow">
+    <li>
+      <button type="button" class="dropdown-item d-flex align-items-center" [class.active]="(themeService.selectedTheme | async) === 'light'" (click)="setTheme('light')">
+        <i class="bi me-2 opacity-50 theme-icon bi-sun-fill"></i>
+        Claro
+        <i class="bi ms-auto bi-check2" *ngIf="(themeService.selectedTheme | async) === 'light'"></i>
+      </button>
+    </li>
+    <li>
+      <button type="button" class="dropdown-item d-flex align-items-center" [class.active]="(themeService.selectedTheme | async) === 'dark'" (click)="setTheme('dark')">
+        <i class="bi me-2 opacity-50 theme-icon bi-moon-stars-fill"></i>
+        Oscuro
+        <i class="bi ms-auto bi-check2" *ngIf="(themeService.selectedTheme | async) === 'dark'"></i>
+      </button>
+    </li>
+    <li>
+      <button type="button" class="dropdown-item d-flex align-items-center" [class.active]="(themeService.selectedTheme | async) === 'auto'" (click)="setTheme('auto')">
+        <i class="bi me-2 opacity-50 theme-icon bi-circle-half"></i>
+        Auto
+        <i class="bi ms-auto bi-check2" *ngIf="(themeService.selectedTheme | async) === 'auto'"></i>
+      </button>
+    </li>
+  </ul>
+</div>

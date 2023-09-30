@@ -1,0 +1,5 @@
+<button (click)="toggleTheme()" class="btn btn-link" [ngClass]="{'btn-lg': size==='btn-lg', 'btn-sm': size==='btn-sm'}">
+  <i *ngIf="(themeService.selectedTheme | async) === 'light'" class="bi bi-moon-fill"></i>
+  <i *ngIf="(themeService.selectedTheme | async) === 'dark'" class="bi bi-sun-fill"></i>
+  <i *ngIf="(themeService.selectedTheme | async) === 'auto'" class="bi bi-circle-half"></i>
+</button>

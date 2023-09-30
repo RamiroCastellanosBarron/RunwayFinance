@@ -9,6 +9,8 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { PagerComponent } from './pager/pager.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BusinessSummaryModalComponent } from './components/modals/business-summary-modal/business-summary-modal.component';
+import { ThemeSwitcherDropdownComponent } from './components/theme/theme-switcher-dropdown/theme-switcher-dropdown.component';
+import { ThemeCyclerButtonComponent } from './components/theme/theme-cycler-button/theme-cycler-button.component';
 
 
 @NgModule({
@@ -16,7 +18,9 @@ import { BusinessSummaryModalComponent } from './components/modals/business-summ
     ConfirmDialogComponent,
     ProfilePictureUploaderComponent,
     PagerComponent,
-    BusinessSummaryModalComponent
+    BusinessSummaryModalComponent,
+    ThemeSwitcherDropdownComponent,
+    ThemeCyclerButtonComponent
   ],
   imports: [
     CommonModule,
@@ -38,6 +42,8 @@ import { BusinessSummaryModalComponent } from './components/modals/business-summ
     PagerComponent,
     PaginationModule,
     BusinessSummaryModalComponent,
+    ThemeSwitcherDropdownComponent,
+    ThemeCyclerButtonComponent,
   ]
 })
 export class SharedModule { }

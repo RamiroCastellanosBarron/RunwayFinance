@@ -22,21 +22,24 @@ export class CompanyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadCompany();
+    this.route.paramMap.subscribe(params => {
+      this.id = params.get('id')!;
+      this.loadCompany();
+    });
   }
 
   loadCompany() {
     return this.companiesService.getCompany(this.id).subscribe({
       next: company => {
         this.company = company;
-        this.loadLastDayTrade(this.company);
+        this.loadRealtimeStockPrice(this.company);
         this.loadStockPricesBySecurity(this.company);
       }
     })
   }
 
-  loadLastDayTrade(company: Company) {
-    return this.companiesService.getLastDayTrade(company.ticker).subscribe({
+  loadRealtimeStockPrice(company: Company) {
+    return this.companiesService.getRealtimeStockPrice(company.ticker).subscribe({
       next: response => {
         this.stockPrice = response;
       }

@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CompaniesService } from 'src/app/core/services/companies.service';
 import { SearchTriggerService } from 'src/app/core/services/search-trigger.service';
-import { Company } from 'src/app/shared/models/company';
 import { CompanySearchParams } from 'src/app/shared/models/company-search-params';
 import { CompanySummary } from 'src/app/shared/models/company-summary';
 import { Pagination } from 'src/app/shared/models/pagination';
@@ -29,7 +28,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.search();
+    // this.search();
     this.searchTriggerSubscription = this.searchTriggerService.triggerSearch$.subscribe(() => {
       this.search();
     });
@@ -46,9 +45,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    console.log(this.searchParams);
     if (this.searchParams.search !== '') {
-      this.companiesService.getCompanies(this.companiesService.getParams()).subscribe({
+      this.companiesService.searchCompanies(this.companiesService.getParams()).subscribe({
         next: response => {
           if (response.result && response.pagination) {
             this.companies = response.result;

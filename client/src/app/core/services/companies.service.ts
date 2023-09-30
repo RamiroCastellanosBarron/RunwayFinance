@@ -19,7 +19,7 @@ export class CompaniesService {
 
   constructor(private http: HttpClient) { }
 
-  getCompanies(searchParams: CompanySearchParams): Observable<PaginatedResult<CompanySummary[]>> {
+  searchCompanies(searchParams: CompanySearchParams): Observable<PaginatedResult<CompanySummary[]>> {
     let params = getPaginationHeaders(searchParams.pageNumber, searchParams.pageSize);
 
     if(searchParams.search) {
@@ -28,14 +28,14 @@ export class CompaniesService {
 
     params = params.append('isActive', searchParams.isActive);
 
-    return getPaginatedResult<CompanySummary[]>(`${this.baseUrl}companies`, params, this.http);
+    return getPaginatedResult<CompanySummary[]>(`${this.baseUrl}companies/search`, params, this.http);
   }
 
   getCompany(id: string): Observable<Company> {
     return this.http.get<Company>(`${this.baseUrl}companies/${id}`);
   }
 
-  getLastDayTrade(identifier: string, source?: string): Observable<RealtimeStockPrice> {
+  getRealtimeStockPrice(identifier: string, source?: string): Observable<RealtimeStockPrice> {
     let params = new HttpParams();
 
     params = params.append('identifier', identifier);
@@ -45,7 +45,7 @@ export class CompaniesService {
     }
 
     return this.http.get<RealtimeStockPrice>
-      (`${this.baseUrl}companies/stock-last-day`, { params: params });
+      (`${this.baseUrl}companies/realtime-stock-price`, { params: params });
   }
 
   getStockPricesBySecurity(parameters: SecurityStockPricesParams): Observable<ApiResponseSecurityStockPrices> {

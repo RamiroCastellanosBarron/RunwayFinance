@@ -8,38 +8,53 @@ namespace API.Controllers
 {
     public class CompaniesController : BaseApiController
     {
-        private readonly IIntrinioService _intrinioService;
-        public CompaniesController(IIntrinioService intrinioService)
+        private readonly ISecurityService _securityService;
+        private readonly ICompanyService _companyService;
+        public CompaniesController(ISecurityService intrinioService, ICompanyService companyService)
         {
-            _intrinioService = intrinioService;
+            _companyService = companyService;
+            _securityService = intrinioService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> SearchCompanies([FromQuery]SearchCompanyParams searchParams)
+        [HttpGet("search")]
+        public async Task<ActionResult<PagedList<CompanySummary>>> SearchCompanies(
+            [FromQuery]SearchCompanyParams searchParams)
         {
-            var companies = await _intrinioService.SearchCompanies(searchParams);
+            var companies = await _companyService.SearchCompanies(searchParams);
 
             Response.AddPaginationHeader(new PaginationHeader(companies.CurrentPage, companies.PageSize,
                 companies.TotalCount, companies.TotalPages));
             
-            return Ok(companies);
+            return companies;
+        }
+
+        [HttpGet("all-companies")]
+        public async Task<ActionResult<PagedList<CompanySummary>>> GetAllCompanies
+            ([FromQuery]AllCompaniesParams parameters)
+        {
+            var companies = await _companyService.GetAllCompanies(parameters);
+
+            Response.AddPaginationHeader(new PaginationHeader(companies.CurrentPage, companies.PageSize,
+                companies.TotalCount, companies.TotalPages));
+            
+            return companies;
         }
 
         [HttpGet("{identifier}")]
         public async Task<ActionResult<Company>> GetCompanyWithIdentifier(string identifier)
         {
-            var company = await _intrinioService.GetCompany(identifier);
+            var company = await _companyService.GetCompany(identifier);
 
             if (company == null) NotFound("Company not found");
 
             return company;
         }
 
-        [HttpGet("stock-last-day")]
-        public async Task<ActionResult<RealtimeStockPrice>> GetLastDayStock
+        [HttpGet("realtime-stock-price")]
+        public async Task<ActionResult<RealtimeStockPrice>> GetRealtimeStockPrice
             ([FromQuery]string identifier, [FromQuery]string source)
         {
-            var result = await _intrinioService.GetLastDayStock(identifier, source);
+            var result = await _securityService.GetRealtimeStockPrice(identifier, source);
 
             return result;
         }
@@ -48,7 +63,7 @@ namespace API.Controllers
         public async Task<ActionResult<ApiResponseSecurityStockPrices>> GetStockPricesBySecurity
             ([FromQuery]StockPricesBySecurityParams parameters)
         {
-            var response = await _intrinioService.GetStockPricesBySecurity(parameters);
+            var response = await _securityService.GetStockPricesBySecurity(parameters);
 
             if (response == null) return NotFound("Not found");
 
