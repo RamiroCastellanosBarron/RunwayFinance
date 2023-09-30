@@ -194,5 +194,40 @@ namespace API.Controllers
 
             return accountToReturn;
         }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<AccountDto>> Register(RegisterDto registerDto)
+        {
+            var userExists = await _userManager.FindByEmailAsync(registerDto.Email);
+
+            if (userExists != null) return BadRequest(new ApiResponse(400, "Email already taken"));
+
+            var user = _mapper.Map<RegisterDto, AppUser>(registerDto);
+
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return BadRequest(new ApiResponse(400, errors));
+            }
+
+            var roleResult = await _userManager.AddToRoleAsync(user, "Member");
+
+            if (!roleResult.Succeeded)
+            {
+                var roleErrors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
+                return BadRequest(new ApiResponse(400, roleErrors));
+            }
+
+            if (await _uow.Complete() < 0)
+                return BadRequest(new ApiResponse(400, "Failed to save user preference"));
+
+            var accountToReturn = _mapper.Map<AppUser, AccountDto>(user);
+
+            accountToReturn.Token = await _tokenService.CreateToken(user);
+
+            return Ok(accountToReturn);
+        }
     }
 }

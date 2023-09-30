@@ -1,0 +1,145 @@
+<div class="bg-body-tertiary">
+  <div class="container-fluid container-lg">
+    <h5 class="display-6 fw-bold" style="padding-top: 100px;">Crea tu cuenta</h5>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" id="registerForm">
+      <div class="row row-cols-1 g-2 mb-2">
+        <div class="col-12 col-md-8 col-lg-4 col-xl-3">
+          <form-control
+            [label]="'Nombre(s)'"
+            [type]="'text'"
+            formControlName="firstName"
+            [placeholder]="''"
+            [shouldAutoFocus]="true"
+            [submitAttempted]="submitAttempted"
+            ></form-control>
+        </div>
+        <div class="col-12 col-md-8 col-lg-4 col-xl-3">
+          <form-control
+            [label]="'Apellido(s)'"
+            formControlName="lastName"
+            [type]="'text'"
+            [placeholder]="''"
+            [submitAttempted]="submitAttempted"
+            ></form-control>
+        </div>
+      </div>
+      <div class="row row-cols-1 g-2 mb-2">
+        <div class="col-12 col-md-8 col-lg-4 col-xl-3">
+          <form-check-radio
+            formControlName="sex"
+            [label]="'Sexo'"
+            [options]="sexes"
+            [submitAttempted]="submitAttempted"
+            >
+          </form-check-radio>
+        </div>
+        <div class="col-12 col-md-8 col-lg-4 col-xl-3">
+          <form-control-datepicker
+            formControlName="dateOfBirth"
+            [label]="'Fecha de nacimiento'"
+            [placeholder]="'1995 01 01'"
+            [submitAttempted]="submitAttempted"
+            ></form-control-datepicker>
+        </div>
+      </div>
+      <div class="row g-2 mb-2">
+        <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+          <form-control
+            [label]="'Teléfono'"
+            formControlName="phoneNumber"
+            [placeholder]="''"
+            [isOptional]="true"
+            [type]="'phone'"
+            [submitAttempted]="submitAttempted"
+            ></form-control>
+        </div>
+      </div>
+      <div class="row g-2 mb-2">
+        <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+          <form-control
+            [label]="'Correo'"
+            formControlName="email"
+            [placeholder]="''"
+            [type]="'email'"
+            [submitAttempted]="submitAttempted"
+            ></form-control>
+        </div>
+      </div>
+      <div class="row g-2 mb-2">
+        <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+          <form-control-password
+            [label]="'Contraseña'"
+            formControlName="password"
+            [formText]="'Tu contraseña debe tener entre 8 y 30 caracteres de longitud, contener letras y números, y debe incluir al menos un carácter especial. No debe contener espacios ni emojis.'"
+            [submitAttempted]="submitAttempted"
+            >
+          </form-control-password>
+        </div>
+      </div>
+      <div class="row g-2 mb-2">
+        <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+          <form-control-password
+            [label]="'Confirmar contraseña'"
+            formControlName="confirmPassword"
+            [submitAttempted]="submitAttempted"
+            >
+          </form-control-password>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+          <hr class="my-4">
+        </div>
+      </div>
+      <form-check
+        formControlName="agreeTermsAndConditions"
+        [submitAttempted]="submitAttempted"
+      >
+        Confirmo que he leído y entendido los
+        <a
+          target="_blank"
+          class="btn btn-link p-0 m-0 mb-1 link-offset-2 link-offset-2-hover link-underline link-underline-opacity-25 link-underline-opacity-75-hover fw-bold"
+          routerLink="/legal/terms-and-conditions"
+          >
+          Términos y Condiciones
+        </a>
+      </form-check>
+      <form-check
+        formControlName="agreePrivacyPolicy"
+        [submitAttempted]="submitAttempted"
+      >
+        Confirmo que he leído y entiendo la
+        <a
+          target="_blank"
+          class="btn btn-link p-0 m-0 mb-1 link-offset-2 link-offset-2-hover link-underline link-underline-opacity-25 link-underline-opacity-75-hover fw-bold"
+          routerLink="/legal/privacy-policy">
+          Política de Privacidad
+        </a>
+      </form-check>
+      <div class="row">
+        <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+          <hr class="my-4">
+        </div>
+      </div>
+
+    </form>
+
+    <div class="row">
+      <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+        <button class="w-100 btn btn-primary btn-lg" type="submit" form="registerForm">Crear cuenta</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+        <hr class="my-4">
+      </div>
+    </div>
+
+    <p class="m-0 p-0"><a class="btn btn-link link-offset-2 link-underline link-underline-opacity-25 p-0 m-0" routerLink="/auth/forgot-password">Olvidé mi contraseña</a></p>
+    <p class="m-0 p-0"><a class="btn btn-link link-offset-2 link-underline link-underline-opacity-25 p-0 m-0" routerLink="/auth/login">Ir a inicio de sesión
+        <i class="bi bi-arrow-right ms-2"></i>
+    </a></p>
+  </div>
+</div>

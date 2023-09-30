@@ -24,6 +24,14 @@ export class AccountService {
     )
   }
 
+  register(values: any) {
+    return this.http.post<Account>(this.baseUrl + 'account/register', values).pipe(
+      map((response: Account) => {
+        this.setCurrentAccount(response);
+      })
+    )
+  }
+
   logout() {
     this.removeAccountFromLocalStorage();
     this.setCurrentAccountSourceToNull();

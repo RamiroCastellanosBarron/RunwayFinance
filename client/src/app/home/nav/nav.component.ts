@@ -10,6 +10,7 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, filter, switchMap, tap } from 'rxjs';
 import { CompanySummary } from 'src/app/shared/models/company-summary';
 import { SearchStateService } from '../search/search-state.service';
+import { AccountService } from 'src/app/core/services/account.service';
 
 @Component({
   selector: 'home-nav',
@@ -31,7 +32,7 @@ export class NavComponent implements OnInit {
 
   constructor(private companiesService: CompaniesService, private router: Router,
     private searchTriggerService: SearchTriggerService, private eRef: ElementRef,
-    public searchStateService: SearchStateService) {
+    public searchStateService: SearchStateService, public accountService: AccountService) {
     this.searchParams = this.companiesService.getParams();
   }
 
@@ -99,6 +100,14 @@ export class NavComponent implements OnInit {
         this.searchStateService.setShowDropdown(false);
       }
     });
+  }
+
+  hideDropdown() {
+    this.searchStateService.setShowDropdown(false);
+  }
+
+  navigateToCompany(company: CompanySummary) {
+    this.router.navigate(['company/' + company.ticker]);
   }
 
 }

@@ -1,59 +1,76 @@
 <ng-container *ngIf="company && stockPrice && securityStockPrices">
 
-  <div class="row row-cols-1 row-cols-md-2 g-2">
+  <div class="row row-cols-1 row-cols-md-2 g-4">
     <div class="col col-lg-8">
-      <h1 class="display-6">{{company.name}}</h1>
+      <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+          <li class="breadcrumb-item" routerLink="/companies/{{company.ticker}}" routerLinkActive="active" aria-current="page">
+            {{company.ticker | uppercase}} • {{company.stockExchange | uppercase }}
+          </li>
+        </ol>
+      </nav>
+      <div class="row g-2">
+        <div class="col">
+          <h1 class="display-6 fw-normal">{{company.legalName}}</h1>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-lg btn-primary border-0 rounded-pill bg-primary bg-opacity-50 text-body">Credit Risk</button>
+        </div>
+      </div>
+      <hr>
 
     </div>
     <div class="col col-lg-4">
 
-      <ul class="list-group mb-3">
-        <li class="list-group-item d-flex justify-content-between align-items-start">
+      <ul class="list-group list-group-flush border border-2 border-primary rounded-4 bg-body-tertiary p-3 mb-4"
+        style="--bs-border-opacity: .5;"
+        >
+        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Previous close</div>
           </div>
           {{ stockPrice.lastPrice | currency:'USD' }}
         </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
+        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Day range</div>
           </div>
           {{securityStockPrices.stockPrices[0].adjLow| currency:'USD'}} -
           {{securityStockPrices.stockPrices[0].adjHigh | currency:'USD'}}
         </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
+        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Year range</div>
           </div>
           {{securityStockPrices.stockPrices[0].fiftyTwoWeekLow | currency:'USD'}} -
           {{securityStockPrices.stockPrices[0].fiftyTwoWeekHigh | currency:'USD'}}
         </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
+        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Avg. volume</div>
           </div>
-          <!-- {{stockPrice.exchangeVolume | currency:'USD':'symbol':'1.0-0' }} -->
-          --
+          {{securityStockPrices.stockPrices[0].adjVolume | currency:'USD':'symbol':'1.0-0'}}
         </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
+        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Market cap</div>
           </div>
-          --
+          {{securityStockPrices.stockPrices[0].adjClose * securityStockPrices.stockPrices[0].adjVolume | currency:'USD':'symbol':'1.0-0'}}
         </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
+        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Dividend yield</div>
           </div>
           --
         </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
+        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Primary exange</div>
           </div>
-          {{company.stockExchange}}
+          {{company.stockExchange }}
         </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
+        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Credit rating</div>
           </div>
@@ -62,7 +79,13 @@
       </ul>
 
       <div class="d-grid gap-2">
-        <button class="btn btn-lg btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">About</button>
+        <button class="btn btn-lg btn-outline-primary rounded-pill border border-2 border-primary bg-body-tertiary text-body
+        px-4 d-flex justify-content-between align-items-center"
+        type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        style="--bs-border-opacity: .5;"
+        >About
+        <i class="bi bi-arrow-down"></i>
+      </button>
       </div>
 
     </div>
