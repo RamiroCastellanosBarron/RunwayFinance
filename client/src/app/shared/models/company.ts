@@ -1,3 +1,6 @@
+import { RealtimeStockPrice } from "./realtime-stock-price"
+import { ApiResponseSecurityStockPrices, StockPrice } from "./stock-prices-by-security"
+
 export interface Company {
   id: string
   ticker: string
@@ -35,4 +38,7 @@ export interface Company {
   lastFundamentalDate: any
   firstStockPriceDate: string
   lastStockPriceDate: string
+
+  stockPrice: RealtimeStockPrice
+  securityStockPrices: ApiResponseSecurityStockPrices;
 }

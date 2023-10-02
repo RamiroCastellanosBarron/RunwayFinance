@@ -3,6 +3,7 @@ using Core.Helpers;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Intrinio.SDK.Model;
+using API.Helpers;
 
 namespace API.Controllers
 {
@@ -16,6 +17,7 @@ namespace API.Controllers
             _securityService = intrinioService;
         }
 
+        [Cached(24)]
         [HttpGet("search")]
         public async Task<ActionResult<PagedList<CompanySummary>>> SearchCompanies(
             [FromQuery]SearchCompanyParams searchParams)
@@ -28,6 +30,7 @@ namespace API.Controllers
             return companies;
         }
 
+        [Cached(24)]
         [HttpGet("all-companies")]
         public async Task<ActionResult<PagedList<CompanySummary>>> GetAllCompanies
             ([FromQuery]AllCompaniesParams parameters)
@@ -37,9 +40,10 @@ namespace API.Controllers
             Response.AddPaginationHeader(new PaginationHeader(companies.CurrentPage, companies.PageSize,
                 companies.TotalCount, companies.TotalPages));
             
-            return companies;
+            return Ok(companies);
         }
 
+        [Cached(24)]
         [HttpGet("{identifier}")]
         public async Task<ActionResult<Company>> GetCompanyWithIdentifier(string identifier)
         {
@@ -47,18 +51,20 @@ namespace API.Controllers
 
             if (company == null) NotFound("Company not found");
 
-            return company;
+            return Ok(company);
         }
 
+        [Cached(2)]
         [HttpGet("realtime-stock-price")]
         public async Task<ActionResult<RealtimeStockPrice>> GetRealtimeStockPrice
             ([FromQuery]string identifier, [FromQuery]string source)
         {
             var result = await _securityService.GetRealtimeStockPrice(identifier, source);
 
-            return result;
+            return Ok(result);
         }
 
+        [Cached(2)]
         [HttpGet("stock-prices-by-security")]
         public async Task<ActionResult<ApiResponseSecurityStockPrices>> GetStockPricesBySecurity
             ([FromQuery]StockPricesBySecurityParams parameters)

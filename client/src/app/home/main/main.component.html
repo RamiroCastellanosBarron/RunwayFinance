@@ -1,0 +1,115 @@
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  <div class="col col-lg-8">
+    <h1 class="fs-4 fw-demibold mb-4">
+      Industry
+    </h1>
+    <div class="row g-2 mb-4">
+      <div class="col">
+        <div class="feature-icon shadow-sm d-inline-flex align-items-center justify-content-center mx-auto text-bg-primary bg-gradient fs-2 mb-3">
+          <i class="bi bi-laptop"></i>
+        </div>
+        <h2 class="fs-6 text-body-emphasis fw-normal">
+          <a (click)="searchTechnology()" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover pointer">
+            Technology
+          </a>
+        </h2>
+      </div>
+      <div class="col">
+        <div class="feature-icon shadow-sm d-inline-flex align-items-center justify-content-center mx-auto text-bg-primary bg-gradient fs-2 mb-3">
+          <i class="bi bi-bandaid"></i>
+        </div>
+        <h2 class="fs-6 text-body-emphasis fw-normal">
+          <a (click)="searchHealth()" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover pointer">
+            Health
+          </a>
+        </h2>
+      </div>
+      <div class="col">
+        <div class="feature-icon shadow-sm d-inline-flex align-items-center justify-content-center mx-auto text-bg-primary bg-gradient fs-2 mb-3">
+          <i class="bi bi-lightning-charge"></i>
+        </div>
+        <h2 class="fs-6 text-body-emphasis fw-normal">
+          <a (click)="searchEnergy()" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover pointer">
+            Energy
+          </a>
+        </h2>
+      </div>
+      <div class="col">
+        <div class="feature-icon shadow-sm d-inline-flex align-items-center justify-content-center mx-auto text-bg-primary bg-gradient fs-2 mb-3">
+          <i class="bi bi-gear-fill"></i>
+        </div>
+        <h2 class="fs-6 text-body-emphasis fw-normal">
+          <a (click)="searchIndustrial()" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover pointer">
+            Industrial
+          </a>
+        </h2>
+      </div>
+      <div class="col">
+        <div class="feature-icon shadow-sm d-inline-flex align-items-center justify-content-center mx-auto text-bg-primary bg-gradient fs-2 mb-3">
+          <i class="bi bi-telephone"></i>
+        </div>
+        <h2 class="fs-6 text-body-emphasis fw-normal">
+          <a (click)="searchTelecom()" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover pointer">
+            Telecom
+          </a>
+        </h2>
+      </div>
+      <div class="col">
+        <div class="feature-icon shadow-sm d-inline-flex align-items-center justify-content-center mx-auto text-bg-primary bg-gradient fs-2 mb-3">
+          <i class="bi bi-cart3"></i>
+        </div>
+        <h2 class="fs-6 text-body-emphasis fw-normal">
+          <a (click)="searchConsumerStaples()" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover pointer">
+            Consumer Staples
+          </a>
+        </h2>
+      </div>
+      <div class="col">
+        <div class="feature-icon shadow-sm d-inline-flex align-items-center justify-content-center mx-auto text-bg-primary bg-gradient fs-2 mb-3">
+          <i class="bi bi-houses"></i>
+        </div>
+        <h2 class="fs-6 text-body-emphasis fw-normal">
+          <a (click)="searchRealEstate()" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-75-hover pointer">
+            Real Estate
+          </a>
+        </h2>
+      </div>
+    </div>
+    <h1 class="fs-4 fw-demibold mb-4">
+      Popular
+    </h1>
+    <div class="list-group list-group-flush border border-2 border-primary rounded-4 bg-body-tertiary p-3 mb-4"
+        style="--bs-border-opacity: .5;"
+        *ngIf="companies.length > 0"
+        >
+        <a *ngFor="let company of companies"
+        routerLink="company/{{company.id}}"
+        class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer">
+          <div class="row row-cols-2">
+            <div class="col">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">{{company.name}}</div>
+              </div>
+            </div>
+            <div class="row row-cols-3">
+              <div class="col">
+                {{ company?.stockPrice?.lastPrice | currency:'USD' }}
+              </div>
+              <div class="col">
+                --
+              </div>
+              <div class="col">
+                --
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    <div class="row mb-4">
+
+    </div>
+  </div>
+  <div class="col col-lg-4">
+
+  </div>
+</div>

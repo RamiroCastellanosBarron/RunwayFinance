@@ -52,7 +52,7 @@ export class CompanyComponent implements OnInit {
     const twoDaysAgo = new Date(today);
 
     oneDayAgo.setDate(today.getDate() - 1);
-    twoDaysAgo.setDate(today.getDate() - 2);
+    twoDaysAgo.setDate(today.getDate() - 3);
 
     const oneDayAgoStr = oneDayAgo.toISOString().split('T')[0];
     const twoDaysAgoStr = twoDaysAgo.toISOString().split('T')[0];

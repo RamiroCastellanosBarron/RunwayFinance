@@ -8,6 +8,7 @@ import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
 import { SearchComponent } from './search/search.component';
 import { CompanyComponent } from './company/company.component';
+import { MainComponent } from './main/main.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { CompanyComponent } from './company/company.component';
     NavComponent,
     SearchComponent,
     CompanyComponent,
+    MainComponent,
   ],
   imports: [
     CommonModule,

@@ -9,6 +9,7 @@ import { PaginatedResult } from 'src/app/shared/models/pagination';
 import { getPaginatedResult, getPaginationHeaders } from 'src/app/shared/utils/paginationHelper';
 import { environment } from 'src/environments/environment';
 import { ApiResponseSecurityStockPrices, SecurityStockPricesParams } from 'src/app/shared/models/stock-prices-by-security';
+import { AllCompanies, AllCompaniesParams, ApiResponseCompanies } from 'src/app/shared/models/all-companies';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ import { ApiResponseSecurityStockPrices, SecurityStockPricesParams } from 'src/a
 export class CompaniesService {
   baseUrl = environment.apiUrl;
   searchParams: CompanySearchParams = new CompanySearchParams;
+  allCompaniesParams: AllCompaniesParams = new AllCompaniesParams();
 
   constructor(private http: HttpClient) { }
 
@@ -50,7 +52,6 @@ export class CompaniesService {
 
   getStockPricesBySecurity(parameters: SecurityStockPricesParams): Observable<ApiResponseSecurityStockPrices> {
     let params = parameters.toHttpParams(parameters);
-    console.log(params);
 
     return this.http.get<ApiResponseSecurityStockPrices>
       (`${this.baseUrl}companies/stock-prices-by-security`, { params: params })
@@ -67,6 +68,24 @@ export class CompaniesService {
   resetParams() {
     this.searchParams = new CompanySearchParams();
     return this.searchParams;
+  }
+
+  getAllCompanies(parameters: AllCompaniesParams): Observable<PaginatedResult<AllCompanies[]>> {
+    let params = parameters.toHttpParams(parameters);
+
+    return getPaginatedResult<AllCompanies[]>(`${this.baseUrl}companies/all-companies`, params, this.http);
+  }
+
+  getAllCompaniesParams() {
+    return this.allCompaniesParams;
+  }
+
+  setAllCompaniesParams(params: AllCompaniesParams) {
+    this.allCompaniesParams = params;
+  }
+
+  resetAllCompaniesParams() {
+    this.allCompaniesParams = new AllCompaniesParams();
   }
 
 }
