@@ -76,15 +76,15 @@
       </div>
     </div>
     <h1 class="fs-4 fw-demibold mb-4">
-      Popular
+      Popular (poner nombres en columnas)
     </h1>
     <div class="list-group list-group-flush border border-2 border-primary rounded-4 bg-body-tertiary p-3 mb-4"
         style="--bs-border-opacity: .5;"
         *ngIf="companies.length > 0"
         >
         <a *ngFor="let company of companies"
-        routerLink="company/{{company.id}}"
-        class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer">
+          routerLink="company/{{company.id}}"
+          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer">
           <div class="row row-cols-2">
             <div class="col">
               <div class="ms-2 me-auto">
@@ -96,9 +96,11 @@
                 {{ company?.stockPrice?.lastPrice | currency:'USD' }}
               </div>
               <div class="col">
+                <!-- Poner en moneda cuanto fue el cambio -->
                 --
               </div>
               <div class="col">
+                <!-- Porcentaje es el cambio que tuvo de la variante del precio del previous close -->
                 --
               </div>
             </div>
