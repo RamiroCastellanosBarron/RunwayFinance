@@ -2,78 +2,189 @@ using API.Extensions;
 using Core.Helpers;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Intrinio.SDK.Model;
 using API.Helpers;
+using Newtonsoft.Json.Linq;
+using API.DTOs;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace API.Controllers
 {
     public class CompaniesController : BaseApiController
     {
-        private readonly ISecurityService _securityService;
-        private readonly ICompanyService _companyService;
-        public CompaniesController(ISecurityService intrinioService, ICompanyService companyService)
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
+
+        public CompaniesController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
-            _companyService = companyService;
-            _securityService = intrinioService;
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
         }
 
-        [Cached(24)]
-        [HttpGet("search")]
-        public async Task<ActionResult<PagedList<CompanySummary>>> SearchCompanies(
-            [FromQuery]SearchCompanyParams searchParams)
+        [Cached(120)]
+        [HttpGet("{ticker}")]
+        public async Task<ActionResult<CompanyInfo>> GetCompanyWithTicker(string ticker)
         {
-            var companies = await _companyService.SearchCompanies(searchParams);
+            var token = _configuration["TiingoSettings:Token"];
+            var requestUrl = $"/iex/{ticker}?token={token}";
 
-            Response.AddPaginationHeader(new PaginationHeader(companies.CurrentPage, companies.PageSize,
-                companies.TotalCount, companies.TotalPages));
-            
-            return companies;
+            var httpClient = _httpClientFactory.CreateClient("TiingoClient");
+
+            var response = await httpClient.GetAsync(requestUrl);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return BadRequest();
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrEmpty(responseBody)) return BadRequest();
+
+            var jsonData = JArray.Parse(responseBody);
+            string jsonString = jsonData[0].ToString();
+            CompanyInfo companyInfo = JsonConvert.DeserializeObject<CompanyInfo>(jsonString);
+
+            return Ok(companyInfo);
         }
 
-        [Cached(24)]
-        [HttpGet("all-companies")]
-        public async Task<ActionResult<PagedList<CompanySummary>>> GetAllCompanies
-            ([FromQuery]AllCompaniesParams parameters)
+        [Cached(120)]
+        [HttpGet("daily/{ticker}")]
+        public async Task<ActionResult<List<DailyData>>> GetFundamentalsDailyData
+            ([FromRoute] string ticker, [FromQuery] DailyParams dailyParams)
         {
-            var companies = await _companyService.GetAllCompanies(parameters);
+            var token = _configuration["TiingoSettings:Token"];
 
-            Response.AddPaginationHeader(new PaginationHeader(companies.CurrentPage, companies.PageSize,
-                companies.TotalCount, companies.TotalPages));
-            
-            return Ok(companies);
+            StringBuilder requestUrlBuilder = new StringBuilder($"/tiingo/fundamentals/{ticker}/daily?token={token}");
+
+            if (dailyParams.StartDate.HasValue)
+            {
+                requestUrlBuilder.Append($"&startDate={dailyParams.StartDate.Value:yyyy-MM-ddTHH:mm:ss.fffZ}");
+            }
+
+            if (dailyParams.EndDate.HasValue)
+            {
+                requestUrlBuilder.Append($"&endDate={dailyParams.EndDate.Value:yyyy-MM-ddTHH:mm:ss.fffZ}");
+            }
+
+            var requestUrl = requestUrlBuilder.ToString();
+
+            var httpClient = _httpClientFactory.CreateClient("TiingoClient");
+            var response = await httpClient.GetAsync(requestUrl);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return BadRequest();
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrEmpty(responseBody)) return BadRequest();
+
+            var jsonData = JArray.Parse(responseBody);
+            string jsonString = jsonData.ToString();
+            var fundamentalsDailyData = JsonConvert.DeserializeObject<List<DailyData>>(jsonString);
+
+            return Ok(fundamentalsDailyData);
         }
 
-        [Cached(24)]
-        [HttpGet("{identifier}")]
-        public async Task<ActionResult<Company>> GetCompanyWithIdentifier(string identifier)
+        [Cached(120)]
+        [HttpGet("meta/{ticker}")]
+        public async Task<ActionResult<Meta>> GetMeta(string ticker)
         {
-            var company = await _companyService.GetCompany(identifier);
+            var token = _configuration["TiingoSettings:Token"];
+            var requestUrl = $"/tiingo/fundamentals/meta?tickers={ticker}&token={token}";
 
-            if (company == null) NotFound("Company not found");
+            var httpClient = _httpClientFactory.CreateClient("TiingoClient");
 
-            return Ok(company);
+            var response = await httpClient.GetAsync(requestUrl);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return BadRequest();
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrEmpty(responseBody)) return BadRequest();
+
+            var jsonData = JArray.Parse(responseBody);
+            string jsonString = jsonData[0].ToString();
+            var fundamentalsMetaData = JsonConvert.DeserializeObject<Meta>(jsonString);
+
+            return Ok(fundamentalsMetaData);
         }
 
-        [Cached(2)]
-        [HttpGet("realtime-stock-price")]
-        public async Task<ActionResult<RealtimeStockPrice>> GetRealtimeStockPrice
-            ([FromQuery]string identifier, [FromQuery]string source)
+        [Cached(120)]
+        [HttpGet("interday-prices/{ticker}")]
+        public async Task<ActionResult<List<InterdayPrice>>> GetHistoricalIntradayPricesEndpoint
+            ([FromRoute] string ticker, [FromQuery] InterdayPriceParams interdayParams)
         {
-            var result = await _securityService.GetRealtimeStockPrice(identifier, source);
+            var token = _configuration["TiingoSettings:Token"];
 
-            return Ok(result);
+            StringBuilder requestUrlBuilder = new StringBuilder($"/iex/{ticker}/prices?token={token}");
+
+            if (interdayParams.StartDate.HasValue)
+            {
+                requestUrlBuilder.Append($"&startDate={interdayParams.StartDate.Value}");
+            }
+
+            if (interdayParams.EndDate.HasValue)
+            {
+                requestUrlBuilder.Append($"&endDate={interdayParams.EndDate.Value}");
+            }
+
+            requestUrlBuilder.Append($"&requestFreq={interdayParams.RequestFreq}");
+
+            var requestUrl = requestUrlBuilder.ToString();
+
+            var httpClient = _httpClientFactory.CreateClient("TiingoClient");
+            var response = await httpClient.GetAsync(requestUrl);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return BadRequest();
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrEmpty(responseBody)) return BadRequest();
+
+            var jsonData = JArray.Parse(responseBody);
+            string jsonString = jsonData.ToString();
+            var interdayPrices = JsonConvert.DeserializeObject<List<InterdayPrice>>(jsonString);
+
+            return Ok(interdayPrices);
         }
 
-        [Cached(2)]
-        [HttpGet("stock-prices-by-security")]
-        public async Task<ActionResult<ApiResponseSecurityStockPrices>> GetStockPricesBySecurity
-            ([FromQuery]StockPricesBySecurityParams parameters)
+        [Cached(120)]
+        [HttpGet("dividend-yield/{ticker}")]
+        public async Task<ActionResult<List<DividendYield>>> GetDividendYield
+            ([FromRoute] string ticker)
         {
-            var response = await _securityService.GetStockPricesBySecurity(parameters);
+            var token = _configuration["TiingoSettings:Token"];
+            var requestUrl = $"/tiingo/corporate-actions/{ticker}/distribution-yield?token={token}";
 
-            if (response == null) return NotFound("Not found");
+            var httpClient = _httpClientFactory.CreateClient("TiingoClient");
 
-            return Ok(response);
+            var response = await httpClient.GetAsync(requestUrl);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return BadRequest();
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrEmpty(responseBody)) return BadRequest();
+
+            var jsonData = JArray.Parse(responseBody);
+            string jsonString = jsonData.ToString();
+            var dividendYields = JsonConvert.DeserializeObject<List<DividendYield>>(jsonString);
+
+            var lastDividend = dividendYields.Last();
+
+            return Ok(lastDividend);
         }
     }
 }

@@ -23,12 +23,10 @@ namespace API.Extensions
                 return ConnectionMultiplexer.Connect(options);
             });
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
-            services.Configure<IntrinioSettings>(config.GetSection("IntrinioSettings"));
+            services.Configure<TiingoSettings>(config.GetSection("TiingoSettings"));
             services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<ISecurityService, SecurityService>();
-            services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IDocumentService, DocumentService>();
@@ -50,6 +48,11 @@ namespace API.Extensions
 
                     return new BadRequestObjectResult(errorResponse);
                 };
+            });
+
+            services.AddHttpClient("TiingoClient", x =>
+            {
+                x.BaseAddress = new Uri(config["TiingoSettings:Url"]);
             });
 
             services.AddCors(opt =>

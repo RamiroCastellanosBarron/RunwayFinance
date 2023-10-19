@@ -1,0 +1,7 @@
+{
+  "/iex/*": {
+    "target": "https://api.tiingo.com",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

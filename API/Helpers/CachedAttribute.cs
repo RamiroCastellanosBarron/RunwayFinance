@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using API.DTOs;
 using API.Extensions;
 using Core.Helpers;
 using Core.Interfaces;
@@ -10,10 +11,10 @@ namespace API.Helpers
 {
     public class CachedAttribute : Attribute, IAsyncActionFilter
     {
-        private readonly int _timeToLiveHours;
-        public CachedAttribute(int timeToLiveHours)
+        private readonly int _timeToLiveMinutes;
+        public CachedAttribute(int timeToLiveMinutes)
         {
-            _timeToLiveHours = timeToLiveHours;
+            _timeToLiveMinutes = timeToLiveMinutes;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -64,10 +65,9 @@ namespace API.Helpers
                     PaginationHeader = headerObj
                 };
 
-                await cacheService.CacheResponseAsync(cacheKey, cachedResponse, TimeSpan.FromHours(_timeToLiveHours));
+                await cacheService.CacheResponseAsync(cacheKey, cachedResponse, TimeSpan.FromMinutes(_timeToLiveMinutes));
             }
         }
-
 
         private string GenerateCacheKeyFromRequest(HttpRequest request)
         {
@@ -77,7 +77,8 @@ namespace API.Helpers
 
             foreach (var (key, value) in request.Query.OrderBy(x => x.Key))
             {
-                keyBuilder.Append($"|{key}-{value}");
+                var safeValue = Uri.EscapeDataString(value.ToString());
+                keyBuilder.Append($"__{key}-{safeValue}");
             }
 
             return keyBuilder.ToString();

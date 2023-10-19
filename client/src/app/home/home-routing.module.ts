@@ -14,7 +14,7 @@ const routes: Routes = [
     component: SearchComponent
   },
   {
-    path: 'company/:id',
+    path: 'company/:ticker',
     component: CompanyComponent
   }
 ];

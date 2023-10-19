@@ -11,7 +11,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BusinessSummaryModalComponent } from './components/modals/business-summary-modal/business-summary-modal.component';
 import { ThemeSwitcherDropdownComponent } from './components/theme/theme-switcher-dropdown/theme-switcher-dropdown.component';
 import { ThemeCyclerButtonComponent } from './components/theme/theme-cycler-button/theme-cycler-button.component';
-
+import { FormatNumberPipe } from './pipes/format-number.pipe';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ThemeCyclerButtonComponent } from './components/theme/theme-cycler-butt
     PagerComponent,
     BusinessSummaryModalComponent,
     ThemeSwitcherDropdownComponent,
-    ThemeCyclerButtonComponent
+    ThemeCyclerButtonComponent,
+    FormatNumberPipe
   ],
   imports: [
     CommonModule,
@@ -30,6 +32,7 @@ import { ThemeCyclerButtonComponent } from './components/theme/theme-cycler-butt
     ModalModule.forRoot(),
     FileUploadModule,
     PaginationModule.forRoot(),
+    NgxChartsModule,
   ],
   exports: [
     FormsModule,
@@ -44,6 +47,8 @@ import { ThemeCyclerButtonComponent } from './components/theme/theme-cycler-butt
     BusinessSummaryModalComponent,
     ThemeSwitcherDropdownComponent,
     ThemeCyclerButtonComponent,
+    FormatNumberPipe,
+    NgxChartsModule,
   ]
 })
 export class SharedModule { }

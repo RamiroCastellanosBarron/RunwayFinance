@@ -13,48 +13,26 @@ import { Pagination } from 'src/app/shared/models/pagination';
   styleUrls: ['./search.component.scss']
 })
 export class SearchComponent implements OnInit, OnDestroy {
-  companies?: CompanySummary[];
-  pagination?: Pagination;
-  searchParams: CompanySearchParams = new CompanySearchParams();
-  private searchTriggerSubscription?: Subscription;
 
   constructor(private route: ActivatedRoute, private companiesService: CompaniesService,
     private searchTriggerService: SearchTriggerService) {
-    this.searchParams = this.companiesService.getParams();
+
   }
 
   ngOnDestroy() {
-    this.searchTriggerSubscription?.unsubscribe();
+
   }
 
   ngOnInit(): void {
-    // this.search();
-    this.searchTriggerSubscription = this.searchTriggerService.triggerSearch$.subscribe(() => {
-      this.search();
-    });
+
   }
 
   onPageChanged(event: any) {
-    const params = this.companiesService.getParams();
-    if (params.pageNumber !== event) {
-      params.pageNumber = event;
-      this.companiesService.setParams(params);
-      this.searchParams = params;
-      this.search();
-    }
+
   }
 
   search() {
-    if (this.searchParams.search !== '') {
-      this.companiesService.searchCompanies(this.companiesService.getParams()).subscribe({
-        next: response => {
-          if (response.result && response.pagination) {
-            this.companies = response.result;
-            this.pagination = response.pagination;
-          }
-        }
-      });
-    }
+
   }
 
 }

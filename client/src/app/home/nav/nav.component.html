@@ -18,24 +18,7 @@
       </div>
       <div class="offcanvas-body">
         <form class="d-flex position-relative flex-grow-1" role="search">
-          <input
-            [formControl]="searchControl"
-            (keyup.enter)="onSearch()"
-            (focus)="onFocus()"
-            style="--bs-focus-ring-color: rgba(var(--bs-success-rgb), .0)"
-            class="form-control form-control-lg me-2 border border-2 border-body bg-body-tertiary rounded-pill
-            focus-ring focus-ring-primary"
-            type="search" placeholder="Search" aria-label="Search">
-          <div class="dropdown-menu d-block position-absolute top-100 shadow border border-2 border-body rounded-3 mt-2"
-            *ngIf="(searchStateService.showDropdown$ | async) && searchResults.length > 0">
-            <a class="dropdown-item py-2 px-3" *ngFor="let result of (searchStateService.searchResults$ | async)" routerLink="/company/{{result.id}}"
-              (click)="hideDropdown()"
-              (keyup.enter)="hideDropdown();
-              navigateToCompany(result);"
-              >
-              {{ result.name }}
-            </a>
-          </div>
+          
         </form>
         <theme-cycler-button [size]="'btn-lg'" class="me-2"></theme-cycler-button>
         <ng-container *ngIf="!(accountService.currentAccount$ | async)">

@@ -1,91 +1,93 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { AllCompaniesParams } from 'src/app/shared/models/all-companies';
 import { Observable } from 'rxjs';
 import { Company } from 'src/app/shared/models/company';
-import { CompanySearchParams } from 'src/app/shared/models/company-search-params';
-import { CompanySummary } from 'src/app/shared/models/company-summary';
-import { RealtimeStockPrice } from 'src/app/shared/models/realtime-stock-price';
-import { PaginatedResult } from 'src/app/shared/models/pagination';
-import { getPaginatedResult, getPaginationHeaders } from 'src/app/shared/utils/paginationHelper';
-import { environment } from 'src/environments/environment';
-import { ApiResponseSecurityStockPrices, SecurityStockPricesParams } from 'src/app/shared/models/stock-prices-by-security';
-import { AllCompanies, AllCompaniesParams, ApiResponseCompanies } from 'src/app/shared/models/all-companies';
+import { Daily, DailyParams, Meta } from 'src/app/shared/models/fundamentals';
+import { InterdayPrice, InterdayPriceParams } from 'src/app/shared/models/interday-price';
+import { DividendYield } from 'src/app/shared/models/dividend-yield';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompaniesService {
   baseUrl = environment.apiUrl;
-  searchParams: CompanySearchParams = new CompanySearchParams;
-  allCompaniesParams: AllCompaniesParams = new AllCompaniesParams();
+  dailyParams = new DailyParams();
+  interdayPriceParams = new InterdayPriceParams();
 
   constructor(private http: HttpClient) { }
 
-  searchCompanies(searchParams: CompanySearchParams): Observable<PaginatedResult<CompanySummary[]>> {
-    let params = getPaginationHeaders(searchParams.pageNumber, searchParams.pageSize);
+  searchCompanies() {
 
-    if(searchParams.search) {
-      params = params.append('search', searchParams.search);
-    }
-
-    params = params.append('isActive', searchParams.isActive);
-
-    return getPaginatedResult<CompanySummary[]>(`${this.baseUrl}companies/search`, params, this.http);
   }
 
-  getCompany(id: string): Observable<Company> {
-    return this.http.get<Company>(`${this.baseUrl}companies/${id}`);
+  getCompany(ticker: string): Observable<Company> {
+    return this.http.get<Company>(this.baseUrl + 'companies/' + ticker);
   }
 
-  getRealtimeStockPrice(identifier: string, source?: string): Observable<RealtimeStockPrice> {
+  getDaily(ticker: string): Observable<Daily[]> {
     let params = new HttpParams();
 
-    params = params.append('identifier', identifier);
-
-    if (source) {
-      params = params.append('source', source);
+    if (this.dailyParams.startDate) {
+      params = params.append('startDate', this.dailyParams.startDate.toISOString());
     }
 
-    return this.http.get<RealtimeStockPrice>
-      (`${this.baseUrl}companies/realtime-stock-price`, { params: params });
+    if (this.dailyParams.endDate) {
+      params = params.append('endDate', this.dailyParams.endDate.toISOString());
+    }
+
+    return this.http.get<Daily[]>(`${this.baseUrl}companies/daily/${ticker}`, { params });
   }
 
-  getStockPricesBySecurity(parameters: SecurityStockPricesParams): Observable<ApiResponseSecurityStockPrices> {
-    let params = parameters.toHttpParams(parameters);
-
-    return this.http.get<ApiResponseSecurityStockPrices>
-      (`${this.baseUrl}companies/stock-prices-by-security`, { params: params })
+  getMeta(ticker: string): Observable<Meta> {
+    return this.http.get<Meta>(`${this.baseUrl}companies/meta/${ticker}`);
   }
 
-  getParams() {
-    return this.searchParams;
+  getDailyParams() {
+    return this.dailyParams;
   }
 
-  setParams(params: CompanySearchParams) {
-    this.searchParams = params;
+  setDailyParams(params: DailyParams) {
+    this.dailyParams = params;
   }
 
-  resetParams() {
-    this.searchParams = new CompanySearchParams();
-    return this.searchParams;
+  resetDailyParams() {
+    this.dailyParams = new DailyParams;
   }
 
-  getAllCompanies(parameters: AllCompaniesParams): Observable<PaginatedResult<AllCompanies[]>> {
-    let params = parameters.toHttpParams(parameters);
+  getInterdayPrices(ticker: string): Observable<InterdayPrice[]> {
+    let params = new HttpParams();
 
-    return getPaginatedResult<AllCompanies[]>(`${this.baseUrl}companies/all-companies`, params, this.http);
+    if (this.interdayPriceParams.startDate) {
+      params = params.append('startDate', this.interdayPriceParams.startDate);
+    }
+
+    if (this.interdayPriceParams.endDate) {
+      params = params.append('endDate', this.interdayPriceParams.endDate);
+    }
+
+    params = params.append('requestFreq', this.interdayPriceParams.requestFreq);
+
+    const url = `${this.baseUrl}companies/interday-prices/${ticker}`;
+
+    return this.http.get<InterdayPrice[]>(url, { params });
   }
 
-  getAllCompaniesParams() {
-    return this.allCompaniesParams;
+  getInterdayPriceParams() {
+    return this.interdayPriceParams;
   }
 
-  setAllCompaniesParams(params: AllCompaniesParams) {
-    this.allCompaniesParams = params;
+  setInterdayPriceParams(params: InterdayPriceParams) {
+    this.interdayPriceParams = params;
   }
 
-  resetAllCompaniesParams() {
-    this.allCompaniesParams = new AllCompaniesParams();
+  resetInterdayPriceParams() {
+    this.interdayPriceParams = new InterdayPriceParams;
+  }
+
+  getDividendYield(ticker: string): Observable<DividendYield> {
+    return this.http.get<DividendYield>(`${this.baseUrl}companies/dividend-yield/${ticker}`);
   }
 
 }

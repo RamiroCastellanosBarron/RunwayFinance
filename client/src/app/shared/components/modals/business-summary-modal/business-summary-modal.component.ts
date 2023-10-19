@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Company } from 'src/app/shared/models/company';
+import { EndOfDayMeta } from 'src/app/shared/models/end-of-day';
+import { Meta } from 'src/app/shared/models/fundamentals';
 
 @Component({
   selector: 'app-business-summary-modal',
@@ -7,5 +9,7 @@ import { Company } from 'src/app/shared/models/company';
   styleUrls: ['./business-summary-modal.component.scss']
 })
 export class BusinessSummaryModalComponent {
-  @Input() company: Company = {} as Company;
+  @Input() meta: Meta = {} as Meta;
+  @Input() endOfDayMeta!: EndOfDayMeta;
+
 }
