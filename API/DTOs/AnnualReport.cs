@@ -2,7 +2,7 @@ namespace API.DTOs
 {
     public class AnnualReportsRoot
     {
-        public AnnualReport[] AnnualReports { get; set; }
+        public List<AnnualReport> AnnualReports { get; set; } = new List<AnnualReport>();
         public string Symbol { get; set; }
     }
 
@@ -23,7 +23,7 @@ namespace API.DTOs
         public string IntangibleAssetsExcludingGoodwill { get; set; }
         public string Goodwill { get; set; }
         public string Investments { get; set; }
-        public string stringTermInvestments { get; set; }
+        public string LongTermInvestments { get; set; }
         public string ShortTermInvestments { get; set; }
         public string OtherCurrentAssets { get; set; }
         public string OtherNonCurrentAssets { get; set; }
@@ -35,10 +35,10 @@ namespace API.DTOs
         public string ShortTermDebt { get; set; }
         public string TotalNonCurrentLiabilities { get; set; }
         public string CapitalLeaseObligations { get; set; }
-        public string stringTermDebt { get; set; }
-        public string CurrentstringTermDebt { get; set; }
-        public string stringTermDebtNoncurrent { get; set; }
-        public string ShortstringTermDebtTotal { get; set; }
+        public string LongTermDebt { get; set; }
+        public string CurrentLongTermDebt { get; set; }
+        public string LongTermDebtNoncurrent { get; set; }
+        public string ShortLongTermDebtTotal { get; set; }
         public string OtherCurrentLiabilities { get; set; }
         public string OtherNonCurrentLiabilities { get; set; }
         public string TotalShareholderEquity { get; set; }

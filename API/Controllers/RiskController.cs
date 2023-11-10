@@ -7,6 +7,8 @@ using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Optimization;
 using Core.Helpers;
+using Core.Interfaces;
+using System.Text.Json;
 
 namespace API.Controllers
 {
@@ -14,8 +16,10 @@ namespace API.Controllers
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
-        public RiskController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        private readonly IResponseCacheService _responseCacheService;
+        public RiskController(IHttpClientFactory httpClientFactory, IConfiguration configuration, IResponseCacheService responseCacheService)
         {
+            _responseCacheService = responseCacheService;
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
         }
@@ -29,19 +33,46 @@ namespace API.Controllers
             var dailyDataResponse = await GetTimeSeriesDaily(ticker, apiKey);
             StockData dailyData = dailyDataResponse.Value;
             var balanceSheetsResponse = await GetAnnualReports(ticker, apiKey);
-            var balanceSheets = balanceSheetsResponse.Value;
+            AnnualReportsRoot balanceSheets = balanceSheetsResponse.Value;
 
             double desviacionEstandar = GetStandardDeviation(dailyData);
 
-            double creditRisk = GetCreditRisk(riskParams.MarketCap, desviacionEstandar);
-            
             var risks = new List<RiskDto>()
             {
-                new RiskDto { Amount = 1000000, Deadline = 2, Rating = "A" },
-                new RiskDto { Amount = 1000000, Deadline = 3, Rating = "B" },
-                new RiskDto { Amount = 1000000, Deadline = 10, Rating = "A" },
-                new RiskDto { Amount = 1000000, Deadline = 20, Rating = "B" },
+                new RiskDto { 
+                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2022")).CurrentDebt), 
+                    Deadline = 1, 
+                    Rating = "A" 
+                },
+                new RiskDto { 
+                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2021")).CurrentDebt), 
+                    Deadline = 2, 
+                    Rating = "A" 
+                },
+                new RiskDto 
+                {
+                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2020")).CurrentDebt), 
+                    Deadline = 3, 
+                    Rating = "B" 
+                },
+                new RiskDto 
+                {
+                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2021")).LongTermDebt), 
+                    Deadline = 10, 
+                    Rating = "A" 
+                },
+                new RiskDto 
+                {
+                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2021")).LongTermDebt), 
+                    Deadline = 20, 
+                    Rating = "B" 
+                },
             };
+
+            foreach (var item in risks)
+            {
+                item.Rating = GetCreditRisk(riskParams.MarketCap, desviacionEstandar, item.Deadline, item.Amount).ToString();
+            }
 
             return risks;
         }
@@ -92,13 +123,13 @@ namespace API.Controllers
             return stockData;
         }
 
-        private double GetCreditRisk(double marketCap, double standardDeviation)
+        private double GetCreditRisk(double marketCap, double standardDeviation, double periodTT, double debt)
         {
             double E0 = marketCap; // Valor de mercado Market Cap
             double se = standardDeviation; // Desviación estándar de rendimientos Desviacion estándar anterior  alpha (Datos alpha)
             double rf = 0.05; // Tasa libre de riesgo  datos estándar de 5.54% o 0.0554
-            double TT = 1; // Tiempo de la deuda  Varia si es corta es de 1,2,3 años si es larga 10,20,30 años  alpha (Datos alpha)
-            double D = 800000; // Monto de la deuda la que saquemos de alpha (Datos alpha)
+            double TT = periodTT; // Tiempo de la deuda  Varia si es corta es de 1,2,3 años si es larga 10,20,30 años  alpha (Datos alpha)
+            double D = debt; // Monto de la deuda la que saquemos de alpha (Datos alpha)
 
             Func<Vector<double>, double> eq24_3 = x =>
             {
@@ -167,6 +198,28 @@ namespace API.Controllers
         private async Task<ActionResult<AnnualReportsRoot>> GetAnnualReports
             (string ticker, string apiKey)
         {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+            
+            string cacheKey = $"ANNUAL_REPORT_{ticker}";
+            
+            var cachedResponse = await _responseCacheService.GetCachedResponse(cacheKey);
+
+            if (cachedResponse != null) {
+                // there is a response
+                // we need to return it
+                // in the correct data type
+                var balanceSheet = JsonConvert.DeserializeObject<AnnualReportsRoot>(cachedResponse.Response);
+                
+                return Ok(balanceSheet);
+             }
+            // there is no response
+            // we need to fetch
+            // we need to save it
+            // then return it
+            
             StringBuilder requestUrlBuilder = new StringBuilder($"/query?function=BALANCE_SHEET&symbol={ticker}&apikey={apiKey}");
 
             var requestUrl = requestUrlBuilder.ToString();
@@ -184,6 +237,13 @@ namespace API.Controllers
             if (string.IsNullOrEmpty(responseBody)) return BadRequest();
 
             var stockData = JsonConvert.DeserializeObject<AnnualReportsRoot>(responseBody);
+
+            var cachedRes = new CachedResponse
+            {
+                Response = System.Text.Json.JsonSerializer.Serialize(responseBody, options),
+            };
+
+            await _responseCacheService.CacheResponseAsync(cacheKey, cachedResponse, TimeSpan.FromHours(24));
 
             return stockData;
         }

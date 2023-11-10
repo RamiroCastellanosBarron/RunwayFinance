@@ -10,6 +10,8 @@ import { Daily, DailyParams, Meta } from 'src/app/shared/models/fundamentals';
 import { InterdayPrice, InterdayPriceParams } from 'src/app/shared/models/interday-price';
 import { formatDate } from 'src/app/shared/utils/util';
 import * as d3 from 'd3';
+import { Risk } from 'src/app/shared/models/risk';
+import { RiskService } from 'src/app/core/services/risk.service';
 
 @Component({
   selector: 'app-company',
@@ -59,9 +61,10 @@ export class CompanyComponent implements OnInit {
   xAxisTicks1m: any[] = []
   xAxisTicks6m: any[] = []
   showCreditRisk = true;
+  risks?: Risk[];
 
   constructor(private companiesService: CompaniesService, private route: ActivatedRoute,
-    private endOfDayService: EndOfDayService) {
+    private endOfDayService: EndOfDayService, private riskService: RiskService) {
     this.ticker = this.route.snapshot.paramMap.get('ticker')!;
     this.dailyParams = this.companiesService.getDailyParams();
   }
@@ -77,6 +80,7 @@ export class CompanyComponent implements OnInit {
       this.loadInterdayPrices1d();
       this.loadInterdayPrices5d();
       this.loadDividendYield();
+      this.loadRisks();
     });
   }
 
@@ -111,6 +115,14 @@ export class CompanyComponent implements OnInit {
         this.dayLow = dayInfo[0].low;
         this.dayVolume = dayInfo[0].volume;
         this.dayClose = dayInfo[0].close;
+      }
+    })
+  }
+
+  loadRisks() {
+    this.riskService.getRisk(this.ticker).subscribe({
+      next: risks => {
+        this.risks = risks;
       }
     })
   }
