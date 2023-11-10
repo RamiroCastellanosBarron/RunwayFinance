@@ -21,7 +21,7 @@ namespace API.Controllers
             _configuration = configuration;
         }
 
-        [Cached(120)]
+        [Cached(60*24)]
         [HttpGet("{ticker}")]
         public async Task<ActionResult<CompanyInfo>> GetCompanyWithTicker(string ticker)
         {
@@ -48,7 +48,7 @@ namespace API.Controllers
             return Ok(companyInfo);
         }
 
-        [Cached(120)]
+        [Cached(60*24)]
         [HttpGet("daily/{ticker}")]
         public async Task<ActionResult<List<DailyData>>> GetFundamentalsDailyData
             ([FromRoute] string ticker, [FromQuery] DailyParams dailyParams)
@@ -88,7 +88,7 @@ namespace API.Controllers
             return Ok(fundamentalsDailyData);
         }
 
-        [Cached(120)]
+        [Cached(60*24)]
         [HttpGet("meta/{ticker}")]
         public async Task<ActionResult<Meta>> GetMeta(string ticker)
         {
@@ -115,7 +115,7 @@ namespace API.Controllers
             return Ok(fundamentalsMetaData);
         }
 
-        [Cached(120)]
+        [Cached(60*24)]
         [HttpGet("interday-prices/{ticker}")]
         public async Task<ActionResult<List<InterdayPrice>>> GetHistoricalIntradayPricesEndpoint
             ([FromRoute] string ticker, [FromQuery] InterdayPriceParams interdayParams)
@@ -157,7 +157,7 @@ namespace API.Controllers
             return Ok(interdayPrices);
         }
 
-        [Cached(120)]
+        [Cached(60*24)]
         [HttpGet("dividend-yield/{ticker}")]
         public async Task<ActionResult<List<DividendYield>>> GetDividendYield
             ([FromRoute] string ticker)
@@ -181,6 +181,10 @@ namespace API.Controllers
             var jsonData = JArray.Parse(responseBody);
             string jsonString = jsonData.ToString();
             var dividendYields = JsonConvert.DeserializeObject<List<DividendYield>>(jsonString);
+
+            if (dividendYields.Count == 0) {
+                return BadRequest("There are no dividend yields");
+            }
 
             var lastDividend = dividendYields.Last();
 

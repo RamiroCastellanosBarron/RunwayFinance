@@ -19,7 +19,7 @@ namespace API.Controllers
         }
 
         //https://api.tiingo.com/tiingo/daily/msft/prices?token={{token}}
-        [Cached(120)]
+        [Cached(60*24)]
         [HttpGet("{ticker}")]
         public async Task<ActionResult<List<EndOfDay>>> GetEndOfDay
             ([FromRoute]string ticker, [FromQuery]EndOfDayParams endOfDayParams)
@@ -65,7 +65,7 @@ namespace API.Controllers
         }
 
         //https://api.tiingo.com/tiingo/daily/<ticker>
-        [Cached(120)]
+        [Cached(60*24*30)]
         [HttpGet("meta/{ticker}")]
         public async Task<ActionResult<EndOfDayMeta>> GetMeta(string ticker)
         {

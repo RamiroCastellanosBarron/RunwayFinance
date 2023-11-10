@@ -58,6 +58,7 @@ export class CompanyComponent implements OnInit {
   xAxisTicks1y: any[] = []
   xAxisTicks1m: any[] = []
   xAxisTicks6m: any[] = []
+  showCreditRisk = true;
 
   constructor(private companiesService: CompaniesService, private route: ActivatedRoute,
     private endOfDayService: EndOfDayService) {
@@ -68,21 +69,25 @@ export class CompanyComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.ticker = params.get('ticker')!;
+      this.loadData();
+      this.loadChartData1y();
+      this.loadChartData5y();
+      this.loadChartData1m();
+      this.loadChartData6m();
+      this.loadInterdayPrices1d();
+      this.loadInterdayPrices5d();
+      this.loadDividendYield();
     });
-    this.loadData();
-    this.loadChartData1y();
-    this.loadChartData5y();
-    this.loadChartData1m();
-    this.loadChartData6m();
-    this.loadInterdayPrices1d();
-    this.loadInterdayPrices5d();
+  }
+
+  onCreditBtnClick() {
+    this.showCreditRisk = !this.showCreditRisk;
   }
 
   loadData() {
     forkJoin([
       this.loadDaily(),
       this.loadMeta(),
-      this.loadDividendYield(),
       this.loadEndOfDay(),
       this.loadEndOfDayMeta(),
       this.loadYearRange(),
@@ -91,7 +96,6 @@ export class CompanyComponent implements OnInit {
       next: ([
         daily,
         meta,
-        dividendYield,
         endOfDay,
         endOfDayMeta,
         yearRange,
@@ -99,7 +103,6 @@ export class CompanyComponent implements OnInit {
       ]) => {
         this.daily = daily;
         this.meta = meta;
-        this.dividendYield = dividendYield;
         this.endOfDay = endOfDay;
         this.endOfDayMeta = endOfDayMeta;
         this.yearLow = yearRange[0].low;
@@ -108,8 +111,6 @@ export class CompanyComponent implements OnInit {
         this.dayLow = dayInfo[0].low;
         this.dayVolume = dayInfo[0].volume;
         this.dayClose = dayInfo[0].close;
-        this.yScaleMin1y = Math.round(this.yearLow) - 5;
-        this.yScaleMax1y = Math.round(this.yearHigh);
       }
     })
   }
@@ -140,13 +141,17 @@ export class CompanyComponent implements OnInit {
         const middleDate = seriesData[Math.floor(seriesData.length / 2)].name;
         const lastDate = seriesData[seriesData.length - 1].name;
 
+        if (this.xAxisTicks5y.length > 0) this.xAxisTicks5y = [];
+
         this.xAxisTicks5y.push(firstDate, middleDate, lastDate);
         const closeValues = seriesData.map(item => item.value);
 
         const lowestClose = Math.min(...closeValues);
         const highestClose = Math.max(...closeValues);
-        this.yScaleMax5y = highestClose;
-        this.yScaleMin5y = lowestClose-5;
+        this.yScaleMax5y = highestClose + 3;
+        this.yScaleMin5y = lowestClose - 5;
+
+        if (this.chartData5y.length > 0) this.chartData5y = [];
 
         this.chartData5y.push({
           name: this.ticker,
@@ -185,8 +190,17 @@ export class CompanyComponent implements OnInit {
         const middleDate = seriesData[Math.floor(seriesData.length / 2)].name;
         const lastDate = seriesData[seriesData.length - 1].name;
 
+        if (this.xAxisTicks1y.length > 0) this.xAxisTicks1y = [];
 
         this.xAxisTicks1y.push(firstDate, middleDate, lastDate);
+        const closeValues = seriesData.map(item => item.value);
+
+        const lowestClose = Math.min(...closeValues);
+        const highestClose = Math.max(...closeValues);
+        this.yScaleMax1y = highestClose + 1;
+        this.yScaleMin1y = lowestClose - 4;
+
+        if (this.chartData1y.length > 0) this.chartData1y = [];
 
         this.chartData1y.push({
             name: this.ticker,
@@ -225,13 +239,17 @@ export class CompanyComponent implements OnInit {
         const middleDate = seriesData[Math.floor(seriesData.length / 2)].name;
         const lastDate = seriesData[seriesData.length - 1].name;
 
+        if (this.xAxisTicks6m.length > 0) this.xAxisTicks6m = [];
+
         this.xAxisTicks6m.push(firstDate, middleDate, lastDate);
         const closeValues = seriesData.map(item => item.value);
 
         const lowestClose = Math.min(...closeValues);
         const highestClose = Math.max(...closeValues);
-        this.yScaleMax6m = highestClose;
-        this.yScaleMin6m = lowestClose-5;
+        this.yScaleMax6m = highestClose + 0.7;
+        this.yScaleMin6m = lowestClose - 0.7;
+
+        if (this.chartData6m.length > 0) this.chartData6m = [];
 
         this.chartData6m.push({
           name: this.ticker,
@@ -270,14 +288,18 @@ export class CompanyComponent implements OnInit {
         const middleDate = seriesData[Math.floor(seriesData.length / 2)].name;
         const lastDate = seriesData[seriesData.length - 1].name;
 
+        if (this.xAxisTicks1m.length > 0) this.xAxisTicks1m = [];
+
         this.xAxisTicks1m.push(firstDate, middleDate, lastDate);
 
         const closeValues = seriesData.map(item => item.value);
 
         const lowestClose = Math.min(...closeValues);
         const highestClose = Math.max(...closeValues);
-        this.yScaleMax1m = highestClose;
-        this.yScaleMin1m = lowestClose-2;
+        this.yScaleMax1m = highestClose + 0.5;
+        this.yScaleMin1m = lowestClose - 0.5;
+
+        if (this.chartData1m.length > 0) this.chartData1m = [];
 
         this.chartData1m.push({
           name: this.ticker,
@@ -316,14 +338,18 @@ export class CompanyComponent implements OnInit {
         const middleDate = seriesData[Math.floor(seriesData.length / 2)].name;
         const lastDate = seriesData[seriesData.length - 1].name;
 
+        if (this.xAxisTicks5d.length > 0) this.xAxisTicks5d = [];
+
         this.xAxisTicks5d.push(firstDate, middleDate, lastDate);
 
         const closeValues = seriesData.map(item => item.value);
 
         const lowestClose = Math.min(...closeValues);
         const highestClose = Math.max(...closeValues);
-        this.yScaleMax5d = highestClose;
-        this.yScaleMin5d = lowestClose-2;
+        this.yScaleMax5d = highestClose + 0.5;
+        this.yScaleMin5d = lowestClose - 0.5;
+
+        if (this.chartData5d.length > 0) this.chartData5d = [];
 
         this.chartData5d.push({
           name: this.ticker,
@@ -363,14 +389,18 @@ export class CompanyComponent implements OnInit {
         const middleDate = seriesData[Math.floor(seriesData.length / 2)].name;
         const lastDate = seriesData[seriesData.length - 1].name;
 
+        if (this.xAxisTicks1d.length > 0) this.xAxisTicks1d = [];
+
         this.xAxisTicks1d.push(firstDate, middleDate, lastDate);
 
         const closeValues = seriesData.map(item => item.value);
 
         const lowestClose = Math.min(...closeValues);
         const highestClose = Math.max(...closeValues);
-        this.yScaleMax1d = highestClose;
-        this.yScaleMin1d = lowestClose-2;
+        this.yScaleMax1d = highestClose + 0.5;
+        this.yScaleMin1d = lowestClose - 0.5;
+
+        if (this.chartData1d.length > 0) this.chartData1d = [];
 
         this.chartData1d.push({
           name: this.ticker,
@@ -451,7 +481,11 @@ export class CompanyComponent implements OnInit {
   }
 
   loadDividendYield() {
-    return this.companiesService.getDividendYield(this.ticker);
+    this.companiesService.getDividendYield(this.ticker).subscribe({
+      next: response => {
+        this.dividendYield = response;
+      }
+    })
   }
 
   view: [number, number] = [700,400]

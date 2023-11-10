@@ -1,29 +1,84 @@
-<ng-container *ngIf="daily && meta && endOfDay && endOfDayMeta">
+<ng-container *ngIf="endOfDay && endOfDayMeta">
 
   <div class="row row-cols-1 row-cols-md-2 g-4">
     <div class="col col-lg-8">
       <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-          <li class="breadcrumb-item" routerLink="/companies/{{meta.ticker}}" routerLinkActive="active" aria-current="page">
-            {{meta.ticker | uppercase}} •
-            {{endOfDayMeta.exchangeCode | uppercase }}
+          <li class="breadcrumb-item" routerLink="/companies/{{endOfDayMeta.ticker}}" routerLinkActive="active"
+            aria-current="page">
+            {{endOfDayMeta.ticker | uppercase}} • {{endOfDayMeta.exchangeCode | uppercase }}
           </li>
         </ol>
       </nav>
       <div class="row g-2">
         <div class="col">
           <h1 class="display-6 fw-normal">
-            {{meta.name}}
+            {{endOfDayMeta.name}}
           </h1>
         </div>
         <div class="col-auto">
-          <button class="btn btn-lg btn-primary border-0 rounded-pill bg-primary bg-opacity-50 text-body">Credit Risk</button>
+          <button class="btn btn-lg btn-primary border-0 rounded-pill bg-primary bg-opacity-50 text-body"
+            (click)="onCreditBtnClick()">Credit Risk</button>
         </div>
       </div>
       <hr>
 
-      <div class="card border border-0">
+      <div *ngIf="showCreditRisk" class="border border-2 border-primary rounded-4 bg-body-tertiary px-5 py-3 mb-4"
+        style="--bs-border-opacity: .5; height: 350px;">
+        <div class="row row-cols-1 row-cols-md-2 g-2 g-md-4">
+          <div class="col">
+            <p>Short Term Debts</p>
+            <table class="table">
+              <thead>
+                <tr class="bg-body-tertiary">
+                  <th scope="col">Amount</th>
+                  <th scope="col">Deadline</th>
+                  <th scope="col">Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="bg-body-tertiary">
+                  <td>{{4700912 | currency:'USD'}}</td>
+                  <td>3 Years</td>
+                  <td>B</td>
+                </tr>
+                <tr class="bg-body-tertiary">
+                  <td>{{4700912 | currency:'USD'}}</td>
+                  <td>2 Years</td>
+                  <td>A</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col">
+            <p>Short Term Debts</p>
+            <table class="table">
+              <thead>
+                <tr class="bg-body-tertiary">
+                  <th scope="col">Amount</th>
+                  <th scope="col">Deadline</th>
+                  <th scope="col">Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="bg-body-tertiary">
+                  <td>{{87002183 | currency:'USD'}}</td>
+                  <td>10 Years</td>
+                  <td>A</td>
+                </tr>
+                <tr class="bg-body-tertiary">
+                  <td>{{87002183 | currency:'USD'}}</td>
+                  <td>20 Years</td>
+                  <td>B</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card border border-0" *ngIf="!showCreditRisk">
         <div class="col-12 col-lg-10 col-xl-8 mx-auto">
           <div class="card-header border rounded shadow-sm">
             <ul class="nav nav-pills card-header-pills nav-fill">
@@ -65,144 +120,61 @@
           && yScaleMax1d && yScaleMin1d">
           <div id="1d" class="tab-pane fade show active">
             <div class="row">
-              <ngx-charts-area-chart
-                *ngIf="chartData1d"
-                [view]="view"
-                [scheme]="colorScheme"
-                [results]="chartData1d"
-                [gradient]="gradient"
-                [xAxis]="showXAxis"
-                [yAxis]="showYAxis"
-                [legend]="showLegend"
-                [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
-                [showGridLines]="false"
-                [yScaleMin]="yScaleMin1d"
-                [yScaleMax]="yScaleMax1d"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [xAxisTicks]="xAxisTicks1d"
-                [legendPosition]="legendPosition"
-                >
+              <ngx-charts-area-chart *ngIf="chartData1d" [view]="view" [scheme]="colorScheme" [results]="chartData1d"
+                [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend"
+                [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [showGridLines]="false"
+                [yScaleMin]="yScaleMin1d" [yScaleMax]="yScaleMax1d" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel"
+                [xAxisTicks]="xAxisTicks1d" [legendPosition]="legendPosition">
               </ngx-charts-area-chart>
             </div>
           </div>
           <div id="5d" class="tab-pane fade">
             <div class="row">
-              <ngx-charts-area-chart
-                *ngIf="chartData5d"
-                [view]="view"
-                [scheme]="colorScheme"
-                [results]="chartData5d"
-                [gradient]="gradient"
-                [xAxis]="showXAxis"
-                [yAxis]="showYAxis"
-                [legend]="showLegend"
-                [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
-                [showGridLines]="false"
-                [yScaleMin]="yScaleMin5d"
-                [yScaleMax]="yScaleMax5d"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [legendPosition]="legendPosition"
-                >
+              <ngx-charts-area-chart *ngIf="chartData5d" [view]="view" [scheme]="colorScheme" [results]="chartData5d"
+                [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend"
+                [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [showGridLines]="false"
+                [yScaleMin]="yScaleMin5d" [yScaleMax]="yScaleMax5d" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel"
+                [legendPosition]="legendPosition">
               </ngx-charts-area-chart>
             </div>
           </div>
           <div id="1m" class="tab-pane fade">
             <div class="row">
-              <ngx-charts-area-chart
-                *ngIf="chartData1m"
-                [view]="view"
-                [scheme]="colorScheme"
-                [results]="chartData1m"
-                [gradient]="gradient"
-                [xAxis]="showXAxis"
-                [yAxis]="showYAxis"
-                [legend]="showLegend"
-                [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
-                [showGridLines]="false"
-                [yScaleMin]="yScaleMin1m"
-                [yScaleMax]="yScaleMax1m"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [xAxisTicks]="xAxisTicks1m"
-                [legendPosition]="legendPosition"
-                >
+              <ngx-charts-area-chart *ngIf="chartData1m" [view]="view" [scheme]="colorScheme" [results]="chartData1m"
+                [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend"
+                [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [showGridLines]="false"
+                [yScaleMin]="yScaleMin1m" [yScaleMax]="yScaleMax1m" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel"
+                [xAxisTicks]="xAxisTicks1m" [legendPosition]="legendPosition">
               </ngx-charts-area-chart>
             </div>
           </div>
           <div id="6m" class="tab-pane fade">
             <div class="row">
-              <ngx-charts-area-chart
-                *ngIf="chartData6m"
-                [view]="view"
-                [scheme]="colorScheme"
-                [results]="chartData6m"
-                [gradient]="gradient"
-                [xAxis]="showXAxis"
-                [yAxis]="showYAxis"
-                [legend]="showLegend"
-                [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
-                [showGridLines]="false"
-                [yScaleMin]="yScaleMin6m"
-                [yScaleMax]="yScaleMax6m"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [xAxisTicks]="xAxisTicks6m"
-                [legendPosition]="legendPosition"
-                >
+              <ngx-charts-area-chart *ngIf="chartData6m" [view]="view" [scheme]="colorScheme" [results]="chartData6m"
+                [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend"
+                [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [showGridLines]="false"
+                [yScaleMin]="yScaleMin6m" [yScaleMax]="yScaleMax6m" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel"
+                [xAxisTicks]="xAxisTicks6m" [legendPosition]="legendPosition">
               </ngx-charts-area-chart>
             </div>
           </div>
           <div id="1y" class="tab-pane fade">
             <div class="row">
-              <ngx-charts-area-chart
-                *ngIf="chartData1y "
-                [view]="view"
-                [scheme]="colorScheme"
-                [results]="chartData1y"
-                [gradient]="gradient"
-                [xAxis]="showXAxis"
-                [yAxis]="showYAxis"
-                [legend]="showLegend"
-                [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
-                [showGridLines]="false"
-                [yScaleMin]="yScaleMin1y"
-                [yScaleMax]="yScaleMax1y"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [xAxisTicks]="xAxisTicks1y"
-                [legendPosition]="legendPosition"
-                >
+              <ngx-charts-area-chart *ngIf="chartData1y " [view]="view" [scheme]="colorScheme" [results]="chartData1y"
+                [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend"
+                [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [showGridLines]="false"
+                [yScaleMin]="yScaleMin1y" [yScaleMax]="yScaleMax1y" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel"
+                [xAxisTicks]="xAxisTicks1y" [legendPosition]="legendPosition">
               </ngx-charts-area-chart>
             </div>
           </div>
           <div id="5y" class="tab-pane fade">
             <div class="row">
-              <ngx-charts-area-chart
-                *ngIf="chartData5y"
-                [view]="view"
-                [scheme]="colorScheme"
-                [results]="chartData5y"
-                [gradient]="gradient"
-                [xAxis]="showXAxis"
-                [yAxis]="showYAxis"
-                [legend]="showLegend"
-                [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
-                [showGridLines]="false"
-                [yScaleMin]="yScaleMin5y"
-                [yScaleMax]="yScaleMax5y"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [xAxisTicks]="xAxisTicks5y"
-                [legendPosition]="legendPosition"
-                >
+              <ngx-charts-area-chart *ngIf="chartData5y" [view]="view" [scheme]="colorScheme" [results]="chartData5y"
+                [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend"
+                [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [showGridLines]="false"
+                [yScaleMin]="yScaleMin5y" [yScaleMax]="yScaleMax5y" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel"
+                [xAxisTicks]="xAxisTicks5y" [legendPosition]="legendPosition">
               </ngx-charts-area-chart>
             </div>
           </div>
@@ -212,9 +184,9 @@
     </div>
     <div class="col col-lg-4">
       <ul class="list-group list-group-flush border border-2 border-primary rounded-4 bg-body-tertiary p-3 mb-4"
-        style="--bs-border-opacity: .5;"
-        >
-        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
+        style="--bs-border-opacity: .5;">
+        <li
+          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Previous close</div>
           </div>
@@ -222,7 +194,8 @@
             {{ dayClose | currency:'USD' }}
           </span>
         </li>
-        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
+        <li
+          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Day range</div>
           </div>
@@ -234,7 +207,8 @@
             {{dayHigh | currency}}
           </span>
         </li>
-        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
+        <li
+          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Year range</div>
           </div>
@@ -246,7 +220,8 @@
             {{yearHigh | currency}}
           </span>
         </li>
-        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
+        <li
+          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Avg. volume</div>
           </div>
@@ -254,13 +229,15 @@
             {{dayVolume | formatNumber}}
           </span>
         </li>
-        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
+        <li *ngIf="daily"
+          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Market cap</div>
           </div>
           {{daily[daily.length-1].marketCap | formatNumber:true}}
         </li>
-        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
+        <li
+          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Dividend yield</div>
           </div>
@@ -268,13 +245,15 @@
             {{ dividendYield.trailingDiv1Y | percent:'1.2-2' }}
           </span>
         </li>
-        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
+        <li
+          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Primary exange</div>
           </div>
           {{endOfDayMeta.exchangeCode | uppercase }}
         </li>
-        <li class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
+        <li
+          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
             <div class="fw-bold">Credit rating</div>
           </div>
@@ -284,17 +263,15 @@
 
       <div class="d-grid gap-2">
         <button class="btn btn-lg btn-outline-primary rounded-pill border border-2 border-primary bg-body-tertiary text-body
-        px-4 d-flex justify-content-between align-items-center"
-        type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
-        style="--bs-border-opacity: .5;"
-        >About
-        <i class="bi bi-arrow-down"></i>
-      </button>
+        px-4 d-flex justify-content-between align-items-center" type="button" data-bs-toggle="modal"
+          data-bs-target="#exampleModal" style="--bs-border-opacity: .5;">About
+          <i class="bi bi-arrow-down"></i>
+        </button>
       </div>
 
     </div>
   </div>
 
-  <app-business-summary-modal [endOfDayMeta]="endOfDayMeta" [meta]="meta"></app-business-summary-modal>
+  <app-business-summary-modal *ngIf="meta" [endOfDayMeta]="endOfDayMeta" [meta]="meta"></app-business-summary-modal>
 
 </ng-container>

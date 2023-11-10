@@ -3,7 +3,31 @@
     Buscador
   </h1>
 
-  
+  <div *ngIf="searchResults">
+    <table class="table table-hover table-borderless">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Ticker</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let company of searchResults" routerLink="/company/{{company.ticker}}"
+          class="pointer">
+          <th>
+            {{company.countryCode}}
+          </th>
+          <th>
+            {{company.name}}
+          </th>
+          <th>
+            {{company.ticker}}
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 </div>
 

@@ -9,7 +9,7 @@ namespace API.DTOs
         public bool IsADR { get; set; }
         public string Sector { get; set; }
         public string Industry { get; set; }
-        public int SicCode { get; set; }
+        public object SicCode { get; set; }
         public string SicSector { get; set; }
         public string SicIndustry { get; set; }
         public string ReportingCurrency { get; set; }

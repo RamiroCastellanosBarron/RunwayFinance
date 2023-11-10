@@ -18,15 +18,5 @@ services:
     depends_on:
       - redis
 
-  postgres:
-    image: postgres
-    environment:
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_USER=appuser
-    ports:
-      - 5432:5432
-    volumes:
-      - /var/lib/postresql/data
-
 volumes:
   redis-data:
