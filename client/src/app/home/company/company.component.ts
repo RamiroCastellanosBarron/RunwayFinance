@@ -80,7 +80,6 @@ export class CompanyComponent implements OnInit {
       this.loadInterdayPrices1d();
       this.loadInterdayPrices5d();
       this.loadDividendYield();
-      this.loadRisks();
     });
   }
 
@@ -115,12 +114,13 @@ export class CompanyComponent implements OnInit {
         this.dayLow = dayInfo[0].low;
         this.dayVolume = dayInfo[0].volume;
         this.dayClose = dayInfo[0].close;
+        this.loadRisks(this.daily[0].marketCap);
       }
     })
   }
 
-  loadRisks() {
-    this.riskService.getRisk(this.ticker).subscribe({
+  loadRisks(marketCap: number) {
+    this.riskService.getRisk(this.ticker, marketCap).subscribe({
       next: risks => {
         this.risks = risks;
       }

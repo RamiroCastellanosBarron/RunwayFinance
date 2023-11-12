@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Risk } from 'src/app/shared/models/risk';
@@ -12,8 +12,14 @@ export class RiskService {
 
   constructor(private http: HttpClient) { }
 
-  getRisk(ticker: string): Observable<Risk[]> {
-    return this.http.get<Risk[]>(this.baseUrl + 'risk/' + ticker);
+  getRisk(ticker: string, marketCap: number): Observable<Risk[]> {
+    let params = new HttpParams();
+
+    if (marketCap) {
+      params = params.append('marketCap', marketCap);
+    }
+
+    return this.http.get<Risk[]>(this.baseUrl + 'risk/' + ticker, { params });
   }
 
 }

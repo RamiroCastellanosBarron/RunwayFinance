@@ -36,7 +36,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__Redis=redis
+      - ConnectionStrings__Redis=localhost
       - TiingoSettings__Url=https://api.tiingo.com
       - TiingoSettings__Token=17bfe3c07ce321045fa1d446b5cb79cf0f4cdaab
       - AlphaVantageSettings__Url=https://www.alphavantage.co
