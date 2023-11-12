@@ -213,7 +213,7 @@ namespace API.Controllers
                 // in the correct data type
                 var balanceSheet = JsonConvert.DeserializeObject<AnnualReportsRoot>(cachedResponse.Response);
                 
-                return Ok(balanceSheet);
+                return balanceSheet;
              }
             // there is no response
             // we need to fetch
@@ -240,10 +240,10 @@ namespace API.Controllers
 
             var cachedRes = new CachedResponse
             {
-                Response = System.Text.Json.JsonSerializer.Serialize(responseBody, options),
+                Response = System.Text.Json.JsonSerializer.Serialize(stockData, options),
             };
 
-            await _responseCacheService.CacheResponseAsync(cacheKey, cachedResponse, TimeSpan.FromHours(24));
+            await _responseCacheService.CacheResponseAsync(cacheKey, cachedRes, TimeSpan.FromHours(24));
 
             return stockData;
         }
