@@ -38,12 +38,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="bg-body-tertiary" *ngIf="risks[1] as risk">
+                <tr class="bg-body-tertiary" *ngIf="risks[0] as risk">
                   <td>{{risk.amount | formatNumber}}</td>
                   <td>{{risk.deadline}} Years</td>
                   <td>{{risk.rating}}</td>
                 </tr>
-                <tr class="bg-body-tertiary" *ngIf="risks[2] as risk">
+                <tr class="bg-body-tertiary" *ngIf="risks[1] as risk">
                   <td>{{risk.amount | formatNumber}}</td>
                   <td>{{risk.deadline}} Years</td>
                   <td>{{risk.rating}}</td>
@@ -62,12 +62,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="bg-body-tertiary" *ngIf="risks[3] as risk">
+                <tr class="bg-body-tertiary" *ngIf="risks[2] as risk">
                   <td>{{risk.amount | formatNumber}}</td>
                   <td>{{risk.deadline}} Years</td>
                   <td>{{risk.rating}}</td>
                 </tr>
-                <tr class="bg-body-tertiary" *ngIf="risks[4] as risk">
+                <tr class="bg-body-tertiary" *ngIf="risks[3] as risk">
                   <td>{{risk.amount | formatNumber}}</td>
                   <td>{{risk.deadline}} Years</td>
                   <td>{{risk.rating}}</td>
@@ -251,16 +251,6 @@
             <div class="fw-bold">Primary exange</div>
           </div>
           {{endOfDayMeta.exchangeCode | uppercase }}
-        </li>
-        <li
-          *ngIf="risks"
-          class="list-group-item list-group-item-action bg-body-tertiary py-3 pointer d-flex justify-content-between align-items-start">
-          <div class="ms-2 me-auto">
-            <div class="fw-bold">Credit rating</div>
-          </div>
-          <span *ngIf="risks[0] as risk">
-            {{risk.rating}}
-          </span>
         </li>
       </ul>
 

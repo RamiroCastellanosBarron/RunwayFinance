@@ -40,18 +40,13 @@ namespace API.Controllers
             var risks = new List<RiskDto>()
             {
                 new RiskDto { 
-                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2022")).CurrentDebt), 
-                    Deadline = 1, 
-                    Rating = "A" 
-                },
-                new RiskDto { 
-                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2021")).CurrentDebt), 
+                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2021")).ShortTermDebt), 
                     Deadline = 2, 
                     Rating = "A" 
                 },
                 new RiskDto 
                 {
-                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2020")).CurrentDebt), 
+                    Amount = long.Parse(balanceSheets.AnnualReports.FirstOrDefault(x => x.FiscalDateEnding.Contains("2020")).ShortTermDebt), 
                     Deadline = 3, 
                     Rating = "B" 
                 },
@@ -71,10 +66,24 @@ namespace API.Controllers
 
             foreach (var item in risks)
             {
-                item.Rating = GetCreditRisk(riskParams.MarketCap, desviacionEstandar, item.Deadline, item.Amount).ToString();
+                item.Rating = GetCreditScore(GetCreditRisk(riskParams.MarketCap, desviacionEstandar, item.Deadline, item.Amount));
             }
 
             return risks;
+        }
+
+        private string GetCreditScore(double creditRisk)
+        {
+            if (creditRisk <= 0.05) {
+                return "A";
+            }
+            else if (creditRisk > 0.05 && creditRisk <= 0.1) {
+                return "B";
+            }
+            else if (creditRisk > 0.1 && creditRisk <= 0.2) {
+                return "C";
+            }
+            return "D";
         }
 
         private double GetStandardDeviation(StockData dailyData)
