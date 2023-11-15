@@ -36,6 +36,7 @@ namespace API.Controllers
             AnnualReportsRoot balanceSheets = balanceSheetsResponse.Value;
 
             double desviacionEstandar = GetStandardDeviation(dailyData);
+            System.Console.WriteLine("Desviación estándar: " + desviacionEstandar);
 
             var risks = new List<RiskDto>()
             {
@@ -103,8 +104,11 @@ namespace API.Controllers
                 rendimientosDiarios.Add(rendimiento);
             }
 
+            var avgPerformances = rendimientosDiarios.Average(x => Math.Pow(x, 2));
+            System.Console.WriteLine("Average Performances = " + avgPerformances);
+
             // Calcula la desviación estándar de los rendimientos
-            double desviacionEstandar = Math.Sqrt(rendimientosDiarios.Average(x => Math.Pow(x, 2)));
+            double desviacionEstandar = Math.Sqrt(avgPerformances);
 
             return desviacionEstandar;
         }
